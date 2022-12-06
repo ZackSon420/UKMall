@@ -1,5 +1,6 @@
 package com.example.ukmall;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -20,13 +21,13 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
 
-        nameET = (EditText) findViewById(R.id.et_name);
+        nameET = (EditText) findViewById(R.id.et_usernamesg);
         emailET = (EditText) findViewById(R.id.et_email);
-        passwordET = (EditText) findViewById(R.id.et_password);
-        password2ET = (EditText) findViewById(R.id.et_password2);
-        ButtonSignup = (Button) findViewById(R.id.bt_signup);
+        passwordET = (EditText) findViewById(R.id.et_passwordsg);
+        password2ET = (EditText) findViewById(R.id.et_passwordsg2);
+        ButtonSignup = (Button) findViewById(R.id.bt_signupsg);
         ButtonSignup.setOnClickListener(this);
-        loginTV= (TextView) findViewById(R.id.tv_login);
+        loginTV= (TextView) findViewById(R.id.tv_loginsg);
         loginTV.setOnClickListener(this);
 
     }
@@ -34,14 +35,14 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         public void onClick(View view) {
             switch (view.getId()) {
 
-                case R.id.bt_signup:
+                case R.id.bt_signupsg:
                     registerUser();
                     break;
 
-                case R.id.tv_login:
-                    //startActivity(new Intent(this,MainActivity.class));
-                    //break;
-                    Toast.makeText(Register.this, "Soon!", Toast.LENGTH_SHORT).show();
+                case R.id.tv_loginsg:
+                    startActivity(new Intent(this,Login.class));
+                    break;
+
 
 
             }
