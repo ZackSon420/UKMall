@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "158869014095",
+    "firebase_url": "https://ukmall-f47b3-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "ukmall-f47b3",
+    "storage_bucket": "ukmall-f47b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:158869014095:android:43876300d4001cf855cc3a",
+        "android_client_info": {
+          "package_name": "com.example.ukmall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "158869014095-ikit8b5ds96l6mc7ihka44cu3qu280bo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdmqVDZgcFuf6qc4L7Q8uFJ_UD05ez11w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "158869014095-ikit8b5ds96l6mc7ihka44cu3qu280bo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
