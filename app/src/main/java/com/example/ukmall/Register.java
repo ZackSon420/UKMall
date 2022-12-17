@@ -9,13 +9,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
     EditText nameET,emailET,passwordET,password2ET;
     TextView loginTV;
     Button ButtonSignup;
+
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +40,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         ButtonSignup.setOnClickListener(this);
         loginTV= (TextView) findViewById(R.id.tv_loginsg);
         loginTV.setOnClickListener(this);
+
+        mAuth = FirebaseAuth.getInstance();
 
     }
         @Override
@@ -60,43 +73,73 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             nameET.requestFocus();
             return;
         }
-        if (email.isEmpty()) {
+        else if (email.isEmpty()) {
             emailET.setError("Email is required!");
             emailET.requestFocus();
             return;
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailET.setError("Please provide valid email!");
             emailET.requestFocus();
             return;
 
         }
 
-        if (password.isEmpty()) {
+        else if (password.isEmpty()) {
             passwordET.setError("Password is required!");
             passwordET.requestFocus();
             return;
         }
-        if (password.length() < 6) {
+        else if (password.length() < 6) {
             passwordET.setError("Min. password length should be 6 characters!");
             passwordET.requestFocus();
             return;
         }
 
-        if (password2.isEmpty()) {
+        else if (password2.isEmpty()) {
             password2ET.setError("Please re-enter your password!");
             password2ET.requestFocus();
             return;
         }
-        if (!password2.equals(password)) {
+        else if (!password2.equals(password)) {
             password2ET.setError("Your password does not matched!");
             password2ET.requestFocus();
             return;
         }
-
+        else
         {
-            Toast.makeText(Register.this, "Next Step", Toast.LENGTH_SHORT).show();
+//            Send data to realtime database in firebase
+
+//            Create user in authentication database
+            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+//                Check berjaya ke tak
+                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                    if(task.isSuccessful()){
+//                        Create new User Object
+                        user user = new user(email,name);
+
+//                        Masukkan object user dalam Realtime Database
+                        FirebaseDatabase.getInstance().getReference("Users")
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(Register.this, "User registered successfully. Try login again, Thankyouu!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(Register.this, "User realtime registration failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(Register.this, "User registration failed", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+            finish();
         }
 
         }
