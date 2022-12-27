@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/chakra_petch_medium</item>
         <item>@font/chakra_petch_semibold</item>
         <item>@font/expletus_sans_semibold</item>
         <item>@font/inter</item>
         <item>@font/inter_bold</item>
+        <item>@font/krona_one</item>
         <item>@font/roboto</item>
     </array>
 </resources>

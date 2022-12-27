@@ -119,7 +119,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
                     if(task.isSuccessful()){
 //                        Create new User Object
-                        user user = new user(email,name);
+                        //Nanti uncomment balik part ni
+                        /*user user = new user(email,name);
 
 //                        Masukkan object user dalam Realtime Database
                         FirebaseDatabase.getInstance().getReference("Users")
@@ -132,7 +133,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                             Toast.makeText(Register.this, "User realtime registration failed", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                });
+                                });*/
                     } else {
                         Toast.makeText(Register.this, "User registration failed", Toast.LENGTH_SHORT).show();
                     }
