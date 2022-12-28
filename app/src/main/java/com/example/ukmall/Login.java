@@ -88,7 +88,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                     if (task.isSuccessful()) {
                         //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                        startActivity(new Intent(Login.this, MainActivity.class));//intent to homepage
+                        startActivity(new Intent(Login.this, Homepage.class));//intent to homepage
                     } else {
                         Toast.makeText(Login.this, "Invalid Username or Password", Toast.LENGTH_LONG).show();
 

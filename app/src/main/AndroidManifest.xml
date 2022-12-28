@@ -20,13 +20,9 @@
         3. N then, dkt mana hg paste intent filter, exported dia tukar jadi "true" -->
         <activity
             android:name=".Homepage"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -47,9 +43,12 @@
         </activity>
         <activity
             android:name=".Login"
-            android:exported="false">
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
