@@ -16,6 +16,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity implements View.OnClickListener{
 
@@ -83,12 +89,34 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
             }
 
             mAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                        startActivity(new Intent(Login.this, Homepage.class));//intent to homepage
+                        Intent intent = new Intent(getApplicationContext(), Homepage.class);
+//                        intent.putExtra("name", name);
+                        startActivity(intent);
+
+                        //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+//                        DatabaseReference userRef = reference.child(username);
+
+//                        userRef.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                String name = String.valueOf(snapshot.child("name").getValue());
+//
+//
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+
+
                     } else {
                         Toast.makeText(Login.this, "Invalid Username or Password", Toast.LENGTH_LONG).show();
 
@@ -99,5 +127,27 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
            // Toast.makeText(Login.this, "Next Step", Toast.LENGTH_SHORT).show();
 
         }
+
+//        public void readUsername(String email){
+//
+//            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+//            reference.child(email).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DataSnapshot> task) {
+//
+//                    if(task.isSuccessful()){
+//
+//                        if(task.getResult().exists()){
+//                            DataSnapshot snapshot = task.getResult();
+//                            String name = String.valueOf(snapshot.child("name").getValue());
+//                        }
+//
+//                    }else{
+//                        Toast.makeText(Login.this, "Failed", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                }
+//            });
+//        }
     }
 
