@@ -107,7 +107,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             password2ET.requestFocus();
             return;
         }
-        //else
+        else
         {
 //            Send data to realtime database in firebase
 
@@ -119,7 +119,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
                     if(task.isSuccessful()){
 //                        Create new User Object
-                        Users user = new user(email,name);
+                        users user = new user(email,name);
 
 //                        Masukkan object user dalam Realtime Database
                         FirebaseDatabase.getInstance().getReference("Users")
