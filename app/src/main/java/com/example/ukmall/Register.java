@@ -108,7 +108,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             return;
         }
         //else
-        /*{
+        {
 //            Send data to realtime database in firebase
 
 //            Create user in authentication database
@@ -140,7 +140,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 }
             });
             finish();
-        }*/
+        }
 
         }
     }
