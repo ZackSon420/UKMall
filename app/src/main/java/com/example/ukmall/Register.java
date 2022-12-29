@@ -119,7 +119,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
                     if(task.isSuccessful()){
 //                        Create new User Object
-                        users user = new user(email,name);
+                        user user = new user(email,name);
 
 //                        Masukkan object user dalam Realtime Database
                         FirebaseDatabase.getInstance().getReference("Users")
