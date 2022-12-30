@@ -11,17 +11,18 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/white_round_container"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_shop_name">
+        app:layout_constraintTop_toBottomOf="@+id/tv_store_name">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="511dp">
+            android:layout_height="match_parent">
+
 
             <TextView
                 android:id="@+id/tv_productName"
@@ -41,7 +42,7 @@
                 android:id="@+id/tv_productPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="Product Price"
                 android:textAlignment="center"
                 android:textColor="#000000"
@@ -55,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="6dp"
                 android:layout_marginEnd="20dp"
                 android:text="Description"
                 android:textSize="15sp"
@@ -65,12 +66,12 @@
 
             <TextView
                 android:id="@+id/tv_productDesc"
-                android:layout_width="match_parent"
-                android:layout_height="171dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="20dp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+                android:text="Lorem ipsum dolor sit amet."
                 android:textAlignment="textStart"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -81,16 +82,16 @@
             <LinearLayout
                 android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="67dp"
+                android:layout_height="0dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="6dp"
                 android:layout_marginEnd="20dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="75dp"
-                android:paddingTop="10dp"
+                android:paddingTop="5dp"
                 android:paddingRight="75dp"
-                android:paddingBottom="15dp"
+                android:paddingBottom="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_productDesc">
@@ -147,7 +148,6 @@
                 android:layout_width="377dp"
                 android:layout_height="66dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -156,7 +156,7 @@
 
                 <Button
                     android:id="@+id/btn_add_to_cart"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
@@ -167,7 +167,7 @@
 
                 <Button
                     android:id="@+id/btn_buy_now"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
@@ -175,15 +175,51 @@
                     android:text="BUY NOW" />
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btn_fetch_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VIEW PRODUCT"
+                android:onClick="loadProduct"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/image_slider"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:iss_auto_cycle="true"
+                app:iss_period="1000"
+                app:iss_delay="10"
+                app:iss_corner_radius="10"
+                app:iss_title_background="@drawable/gradient" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="366dp"
-        android:layout_height="267dp"
+        android:id="@+id/iv_product"
+        android:layout_width="330dp"
+        android:layout_height="191dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
@@ -194,11 +230,11 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/tv_shop_name"
+        android:id="@+id/tv_store_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Shop Name"
+        android:text="Store Name"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="#000000"
@@ -207,16 +243,16 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_product" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/design_bottom_nav"
-        app:labelVisibilityMode="labeled"
 
         app:itemIconSize="30dp"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
