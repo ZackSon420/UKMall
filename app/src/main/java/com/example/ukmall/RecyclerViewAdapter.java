@@ -1,6 +1,5 @@
 package com.example.ukmall;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,20 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
-    Context context;
-
-    ArrayList<Product> productArrayList;
     //Array ganti dgn product kat firebase
     int [] arr;
-
-    public RecyclerViewAdapter(Context context, ArrayList<Product> productArrayList) {
-        this.context = context;
-        this.productArrayList = productArrayList;
-    }
 
     public RecyclerViewAdapter(int[] arr) {
 
@@ -42,22 +31,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         //Link dengan Firebase
-//        holder.iv_product.setImageResource(arr[position]);
-//        holder.tv_prodname.setText("Brownies (4pcs)");
-//        holder.tv_prodprice.setText("RM10");
-
-        Product product = productArrayList.get(position);
-        holder.tv_prodname.setText(product.name);
-        holder.tv_prodprice.setText(String.valueOf(product.price));
+        holder.iv_product.setImageResource(arr[position]);
+        holder.tv_prodname.setText("Brownies (4pcs)");
+        holder.tv_prodprice.setText("RM10");
     }
 
     @Override
     public int getItemCount() {
-//      return arr.length; //Length items dalam firebase
-        return productArrayList.size();
+        return arr.length; //Length items dalam firebase
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder
+    {
 
         ImageView iv_product;
         TextView tv_prodname,tv_prodprice;
