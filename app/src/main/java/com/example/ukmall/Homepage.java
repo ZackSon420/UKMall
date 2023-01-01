@@ -37,7 +37,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener 
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
-    //ArrayList<Product> productArrayList;
+    ArrayList<Product> productArrayList;
     FirebaseFirestore db;
 
     //button search
@@ -72,8 +72,8 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener 
 //        recyclerViewAdapter=new RecyclerViewAdapter(arr);
 
         db = FirebaseFirestore.getInstance();
-        //productArrayList = new ArrayList<Product>();
-        //recyclerViewAdapter=new RecyclerViewAdapter(Homepage.this, productArrayList);
+        productArrayList = new ArrayList<Product>();
+        recyclerViewAdapter=new RecyclerViewAdapter(Homepage.this, productArrayList);
 
         //Adapter ada dalam kelas Java baru named "RecyclerViewAdapter"
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -130,7 +130,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener 
 
                     for(DocumentChange dc : task.getResult().getDocumentChanges()){
                         if(dc.getType()==DocumentChange.Type.ADDED){
-                            //productArrayList.add(dc.getDocument().toObject(Product.class));
+                            productArrayList.add(dc.getDocument().toObject(Product.class));
                         }
                     }
                     recyclerViewAdapter.notifyDataSetChanged();
