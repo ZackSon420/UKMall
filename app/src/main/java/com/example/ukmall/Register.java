@@ -107,7 +107,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             password2ET.requestFocus();
             return;
         }
-        /*else
+        else
         {
 //            Send data to realtime database in firebase
 
@@ -140,7 +140,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 }
             });
             finish();
-        }*/
+        }
 
         }
     }
