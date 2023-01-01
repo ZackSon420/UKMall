@@ -1,5 +1,7 @@
 package com.example.ukmall;
 
+import java.io.Serializable;
+
 public class Product {
     String name;
     Integer price;

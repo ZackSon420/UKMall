@@ -1,6 +1,7 @@
 package com.example.ukmall;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     Context context;
+    Product product;
 
     ArrayList<Product> productArrayList;
     //Array ganti dgn product kat firebase
@@ -46,9 +50,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //        holder.tv_prodname.setText("Brownies (4pcs)");
 //        holder.tv_prodprice.setText("RM10");
 
-        Product product = productArrayList.get(position);
+        product = productArrayList.get(position);
         holder.tv_prodname.setText(product.name);
         holder.tv_prodprice.setText(String.valueOf(product.price));
+
     }
 
     @Override
@@ -68,6 +73,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             iv_product=itemView.findViewById(R.id.img_product);
             tv_prodname=itemView.findViewById(R.id.tv_nameproduct);
             tv_prodprice=itemView.findViewById(R.id.tv_priceproduct);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(itemView.getContext(),ProductDetails.class);
+                    intent.putExtra("productName",product.getName());
+                    intent.putExtra("productPrice",product.getPrice());
+
+                    itemView.getContext().startActivity(intent);
+                }
+            });
         }
     }
+
 }

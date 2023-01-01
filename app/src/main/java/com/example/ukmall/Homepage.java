@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -31,7 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class Homepage extends AppCompatActivity implements View.OnClickListener {
+public class Homepage extends AppCompatActivity implements View.OnClickListener{
 
     //Declare RecyclerView
     private RecyclerView recyclerView;
@@ -49,9 +50,6 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener 
     //Nanti tukar kepada data dalam firebase
     int []arr={R.drawable.brownies,R.drawable.brownies,R.drawable.brownies,R.drawable.brownies,R.drawable.brownies,
             R.drawable.brownies,R.drawable.brownies,R.drawable.brownies};
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
