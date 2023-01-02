@@ -28,21 +28,16 @@ import java.util.ArrayList;
 /*
 
     THINGS TO DO
-    - Study cara display product on selected item
-    - Cari cara locate product from firestore
-    - Add functionality quantity button
     - Resize button
     - Check position all component on different screen size
 
  */
 public class ProductDetails extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String KEY_PRODUCT_NAME = "name";
-    private static final String KEY_PRODUCT_DESC = "description";
-    private static final String KEY_STORE_NAME = "name";
 
-    // Study cara retrieve data from integer
-    // private static final String KEY_PRODUCT_PRICE = "price";
+    //private static final String KEY_PRODUCT_NAME = "name";
+    //private static final String KEY_PRODUCT_DESC = "description";
+    //private static final String KEY_STORE_NAME = "name";
 
     //declare variable
     TextView tvStoreName, tvProductName, tvProductPrice, tvProductDesc, tvQuantity;
@@ -50,7 +45,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     private ImageSlider imageSlider;
     Integer quantity = 1;
 
-    //declare location firestore & cari cara nak locate based on selected product from recycler view
+    //Retrieve data manually
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference productRef = db.document("/store/Q9oYbWZLA5Mj7CBee5kK/product/testproduct");
     DocumentReference storeRef = db.document("/store/Q9oYbWZLA5Mj7CBee5kK");
@@ -59,6 +54,8 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
+
+        ArrayList<SlideModel> slideModels = new ArrayList<>();
 
         tvStoreName = findViewById(R.id.tv_store_name);
         tvProductName = findViewById(R.id.tv_productName);
@@ -79,29 +76,37 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         btnAddToCart.setOnClickListener(this);
         btnBuyNow.setOnClickListener(this);
 
+        //get data from RecyclerView
         Intent intent = getIntent();
-        tvProductName.setText(intent.getStringExtra("productName").toString());
-        //tvStoreName.setText(intent.getStringExtra("productName").toString());
-        tvProductPrice.setText(intent.getStringExtra("productPrice").toString());
+        tvProductName.setText(intent.getStringExtra("productName"));
+        tvProductDesc.setText(intent.getStringExtra("productDesc"));
+        tvProductPrice.setText(intent.getStringExtra("productPrice"));
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add: {
-                addQuantity();
+                quantity++;
+                tvQuantity.setText(quantity.toString());
                 break;
             }
 
             case R.id.btn_minus: {
-                minusQuantity();
+                if (quantity >= 1)
+                    quantity--;
+                else
+                    quantity = 0;
+                tvQuantity.setText(quantity.toString());
                 break;
             }
 
-            case R.id.btn_fetch_data: {
+            //button untuk fetch data
+            /*case R.id.btn_fetch_data: {
                 //loadProduct();
                 break;
             }
+             */
 
             case R.id.btn_add_to_cart: {
                 addToCart();
@@ -125,20 +130,6 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         Toast.makeText(ProductDetails.this, "Item were added to cart", Toast.LENGTH_SHORT).show();
 
     }
-
-    private void minusQuantity() {
-        if (quantity >= 1)
-            quantity--;
-        else
-            quantity = 0;
-        tvQuantity.setText(quantity.toString());
-    }
-
-    private void addQuantity() {
-        quantity++;
-        tvQuantity.setText(quantity.toString());
-    }
-
 
     //display all product details when button clicked
     /*private void loadProduct () {

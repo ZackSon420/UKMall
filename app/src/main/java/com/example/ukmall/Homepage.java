@@ -67,7 +67,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
         recyclerView=findViewById(R.id.rv_products);
         layoutManager=new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
-//        recyclerViewAdapter=new RecyclerViewAdapter(arr);
+        //recyclerViewAdapter=new RecyclerViewAdapter(arr);
 
         db = FirebaseFirestore.getInstance();
         productArrayList = new ArrayList<Product>();

@@ -1,16 +1,15 @@
 package com.example.ukmall;
 
-import java.io.Serializable;
-
 public class Product {
-    String name;
+    String name,description;
     Integer price;
 
     public Product(){
     }
 
-    public Product(String name, Integer price) {
+    public Product(String name, String description, Integer price) {
         this.name = name;
+        this.description = description;
         this.price = price;
     }
 
@@ -20,6 +19,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDesc() {
+        return description;
+    }
+
+    public void setDesc(String description) {
+        this.description = description;
     }
 
     public Integer getPrice() {

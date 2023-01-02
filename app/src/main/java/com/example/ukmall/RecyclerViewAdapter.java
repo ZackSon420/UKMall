@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
@@ -53,7 +51,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         product = productArrayList.get(position);
         holder.tv_prodname.setText(product.name);
         holder.tv_prodprice.setText(String.valueOf(product.price));
-
     }
 
     @Override
@@ -77,9 +74,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    int index = getAdapterPosition();
                     Intent intent = new Intent(itemView.getContext(),ProductDetails.class);
+                    product = productArrayList.get(index);
                     intent.putExtra("productName",product.getName());
-                    intent.putExtra("productPrice",product.getPrice());
+                    intent.putExtra("productDesc",product.getDesc());
+                    intent.putExtra("productPrice", "RM" + String.valueOf(product.getPrice()));
 
                     itemView.getContext().startActivity(intent);
                 }
