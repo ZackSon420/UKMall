@@ -1,16 +1,25 @@
 package com.example.ukmall;
 
 public class Product {
-    String name,description;
+    String name, description;
     Integer price;
 
     public Product(){
     }
 
-    public Product(String name, String description, Integer price) {
+    public Product(String name, Integer price, String description) {
         this.name = name;
-        this.description = description;
         this.price = price;
+        this.description = description;
+
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getName() {
@@ -19,14 +28,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDesc() {
-        return description;
-    }
-
-    public void setDesc(String description) {
-        this.description = description;
     }
 
     public Integer getPrice() {

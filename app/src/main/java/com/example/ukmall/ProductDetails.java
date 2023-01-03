@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,9 +47,10 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     Integer quantity = 1;
 
     //Retrieve data manually
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    /*FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference productRef = db.document("/store/Q9oYbWZLA5Mj7CBee5kK/product/testproduct");
     DocumentReference storeRef = db.document("/store/Q9oYbWZLA5Mj7CBee5kK");
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,13 +123,19 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     }
 
     private void buyNow() {
-        Toast.makeText(ProductDetails.this, "Buy Now!", Toast.LENGTH_SHORT).show();
+        if(quantity > 0)
+            Toast.makeText(ProductDetails.this, "Buy Now!", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(ProductDetails.this, "Please select at least 1 quantity", Toast.LENGTH_SHORT).show();
         //akan proceed to payment page
     }
 
     //function add to cart
     private void addToCart() {
-        Toast.makeText(ProductDetails.this, "Item were added to cart", Toast.LENGTH_SHORT).show();
+        if(quantity > 0)
+            Toast.makeText(ProductDetails.this, "Item were added to cart", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(ProductDetails.this, "Please select at least 1 quantity", Toast.LENGTH_SHORT).show();
 
     }
 

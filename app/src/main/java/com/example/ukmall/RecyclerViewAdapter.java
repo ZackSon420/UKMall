@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     Context context;
-    Product product;
 
     ArrayList<Product> productArrayList;
     //Array ganti dgn product kat firebase
@@ -48,7 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //        holder.tv_prodname.setText("Brownies (4pcs)");
 //        holder.tv_prodprice.setText("RM10");
 
-        product = productArrayList.get(position);
+        Product product = productArrayList.get(position);
         holder.tv_prodname.setText(product.name);
         holder.tv_prodprice.setText(String.valueOf(product.price));
     }
@@ -71,15 +70,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             tv_prodname=itemView.findViewById(R.id.tv_nameproduct);
             tv_prodprice=itemView.findViewById(R.id.tv_priceproduct);
 
+            //call selected product data
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int index = getAdapterPosition();
+                    //pass data to Product Details activity
                     Intent intent = new Intent(itemView.getContext(),ProductDetails.class);
-                    product = productArrayList.get(index);
-                    intent.putExtra("productName",product.getName());
-                    intent.putExtra("productDesc",product.getDesc());
-                    intent.putExtra("productPrice", "RM" + String.valueOf(product.getPrice()));
+                    Product selectedProduct = productArrayList.get(index);
+                    intent.putExtra("productName",selectedProduct.getName());
+                    intent.putExtra("productDesc",selectedProduct.getDescription());
+                    intent.putExtra("productPrice", "RM" + String.valueOf(selectedProduct.getPrice()));
 
                     itemView.getContext().startActivity(intent);
                 }
