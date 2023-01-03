@@ -49,6 +49,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Product product = productArrayList.get(position);
         holder.tv_prodname.setText(product.name);
         holder.tv_prodprice.setText(String.valueOf(product.price));
+        holder.tv_desc.setText(product.getDescription());
     }
 
     @Override
@@ -60,7 +61,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView iv_product;
-        TextView tv_prodname,tv_prodprice;
+        TextView tv_prodname,tv_prodprice, tv_desc;
         //Kena create lagi satu untuk rating
 
         public MyViewHolder(@NonNull View itemView) {
@@ -68,6 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             iv_product=itemView.findViewById(R.id.img_product);
             tv_prodname=itemView.findViewById(R.id.tv_nameproduct);
             tv_prodprice=itemView.findViewById(R.id.tv_priceproduct);
+            tv_desc=itemView.findViewById(R.id.tv_desc);
         }
     }
 }
