@@ -1,17 +1,25 @@
 package com.example.ukmall;
 
 public class Product {
-    String name, description;
+    String name, description, url;
     Integer price;
 
     public Product(){
     }
 
-    public Product(String name, Integer price, String description) {
+    public Product(String name, String description, String url, Integer price) {
         this.name = name;
-        this.price = price;
         this.description = description;
+        this.url = url;
+        this.price = price;
+    }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {

@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
@@ -47,9 +49,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //        holder.tv_prodprice.setText("RM10");
 
         Product product = productArrayList.get(position);
+        //Ambil gambar dari link dalam product
+        Picasso.get().load(product.getUrl()).into(holder.iv_product);
         holder.tv_prodname.setText(product.name);
         holder.tv_prodprice.setText(String.valueOf(product.price));
-        holder.tv_desc.setText(product.getDescription());
     }
 
     @Override
@@ -61,7 +64,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView iv_product;
-        TextView tv_prodname,tv_prodprice, tv_desc;
+        TextView tv_prodname,tv_prodprice;
         //Kena create lagi satu untuk rating
 
         public MyViewHolder(@NonNull View itemView) {
@@ -69,7 +72,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             iv_product=itemView.findViewById(R.id.img_product);
             tv_prodname=itemView.findViewById(R.id.tv_nameproduct);
             tv_prodprice=itemView.findViewById(R.id.tv_priceproduct);
-            tv_desc=itemView.findViewById(R.id.tv_desc);
         }
     }
 }

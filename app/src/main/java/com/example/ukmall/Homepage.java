@@ -28,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener 
     RecyclerViewAdapter recyclerViewAdapter;
     ArrayList<Product> productArrayList;
     FirebaseFirestore db;
+    StorageReference storage;
 
     //button search
     ImageView  iv_searchproduct;
@@ -74,6 +77,9 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener 
         db = FirebaseFirestore.getInstance();
         productArrayList = new ArrayList<Product>();
         recyclerViewAdapter=new RecyclerViewAdapter(Homepage.this, productArrayList);
+
+//        Reference storage
+        //storage = FirebaseStorage.getInstance().getReference("product_images/");
 
         //Adapter ada dalam kelas Java baru named "RecyclerViewAdapter"
         recyclerView.setAdapter(recyclerViewAdapter);
