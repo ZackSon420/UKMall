@@ -82,6 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     intent.putExtra("productDesc",selectedProduct.getDescription());
                     intent.putExtra("productImage",String.valueOf(selectedProduct.getUrl()));
                     intent.putExtra("productImage2",String.valueOf(selectedProduct.getUrl2()));
+                    intent.putExtra("store",selectedProduct.getStore());
                     intent.putExtra("productPrice", "RM" + String.valueOf(selectedProduct.getPrice()));
 
                     itemView.getContext().startActivity(intent);

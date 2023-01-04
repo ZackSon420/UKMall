@@ -84,6 +84,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         tvProductName.setText(intent.getStringExtra("productName"));
         tvProductDesc.setText(intent.getStringExtra("productDesc"));
         tvProductPrice.setText(intent.getStringExtra("productPrice"));
+        tvStoreName.setText(intent.getStringExtra("store"));
         img = intent.getStringExtra("productImage");
         img2 = intent.getStringExtra("productImage2");
 

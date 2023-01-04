@@ -23,29 +23,6 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     <LinearLayout
-        android:id="@+id/linearLayout5"
-        android:layout_width="414dp"
-        android:layout_height="308dp"
-        android:background="@drawable/bot_round_white_container"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone">
-
-        <ImageView
-            android:id="@+id/iv_product"
-            android:layout_width="371dp"
-            android:layout_height="272dp"
-            android:contentDescription="product"
-            tools:layout_conversion_absoluteHeight="191dp"
-            tools:layout_conversion_absoluteWidth="330dp"
-            tools:srcCompat="@tools:sample/avatars" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
