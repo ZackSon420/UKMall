@@ -44,6 +44,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     TextView tvStoreName, tvProductName, tvProductPrice, tvProductDesc, tvQuantity;
     Button btnAdd, btnMinus, btnAddToCart, btnBuyNow, btnViewProduct;
     private ImageSlider imageSlider;
+    String img, img2;
     Integer quantity = 1;
 
     //Retrieve data manually
@@ -83,6 +84,15 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         tvProductName.setText(intent.getStringExtra("productName"));
         tvProductDesc.setText(intent.getStringExtra("productDesc"));
         tvProductPrice.setText(intent.getStringExtra("productPrice"));
+        img = intent.getStringExtra("productImage");
+        img2 = intent.getStringExtra("productImage2");
+
+        //add image to imageSlider
+        slideModels.add(new SlideModel(img,ScaleTypes.FIT));
+        //slideModels.add(new SlideModel(img2, ScaleTypes.CENTER_INSIDE));
+
+        imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
     }
 
     @Override
