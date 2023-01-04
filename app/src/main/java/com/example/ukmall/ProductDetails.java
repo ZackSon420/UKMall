@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -93,6 +95,43 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         //slideModels.add(new SlideModel(img2, ScaleTypes.CENTER_INSIDE));
 
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+        // BottomNavigationView
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottomNavigation);
+
+        // Utk set Home as default
+        bottomNavigationView.setSelectedItemId(R.id.home);
+
+
+        // Perform item selected listener untuk button BottomNavigationView
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(), Homepage.class));
+                        Toast.makeText(ProductDetails.this, "Homepage", Toast.LENGTH_SHORT).show();
+                        overridePendingTransition(0, 0);
+                        return true;
+
+                    case R.id.addtocart:
+                        Toast.makeText(ProductDetails.this, "Add to Cart", Toast.LENGTH_SHORT).show();
+                        return true;
+
+                    case R.id.addproduct:
+                        startActivity(new Intent(getApplicationContext(), Add_Product.class));
+                        //Toast.makeText(Add_Product.class, "Add Product", Toast.LENGTH_SHORT).show();
+                        return true;
+
+                    case R.id.account:
+                        Toast.makeText(ProductDetails.this, "User Account", Toast.LENGTH_SHORT).show();
+                        return true;
+
+                }
+                return false;
+            }
+        });
 
     }
 
