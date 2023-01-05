@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -33,7 +34,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class Homepage extends AppCompatActivity implements View.OnClickListener {
+public class Homepage extends AppCompatActivity implements View.OnClickListener{
 
     //Declare RecyclerView
     private RecyclerView recyclerView;
@@ -53,9 +54,6 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener 
     int []arr={R.drawable.brownies,R.drawable.brownies,R.drawable.brownies,R.drawable.brownies,R.drawable.brownies,
             R.drawable.brownies,R.drawable.brownies,R.drawable.brownies};
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +70,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener 
         recyclerView=findViewById(R.id.rv_products);
         layoutManager=new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
-//        recyclerViewAdapter=new RecyclerViewAdapter(arr);
+        //recyclerViewAdapter=new RecyclerViewAdapter(arr);
 
         db = FirebaseFirestore.getInstance();
         productArrayList = new ArrayList<Product>();

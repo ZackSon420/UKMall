@@ -1,6 +1,7 @@
 package com.example.ukmall;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             iv_product=itemView.findViewById(R.id.img_product);
             tv_prodname=itemView.findViewById(R.id.tv_nameproduct);
             tv_prodprice=itemView.findViewById(R.id.tv_priceproduct);
+
+            //call selected product data
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int index = getAdapterPosition();
+                    //pass data to Product Details activity
+                    Intent intent = new Intent(itemView.getContext(),ProductDetails.class);
+                    Product selectedProduct = productArrayList.get(index);
+                    intent.putExtra("productName",selectedProduct.getName());
+                    intent.putExtra("productDesc",selectedProduct.getDescription());
+                    intent.putExtra("productImage",String.valueOf(selectedProduct.getUrl()));
+                    intent.putExtra("productImage2",String.valueOf(selectedProduct.getUrl2()));
+                    intent.putExtra("store",selectedProduct.getStore());
+                    intent.putExtra("productPrice", "RM" + String.valueOf(selectedProduct.getPrice()));
+
+                    itemView.getContext().startActivity(intent);
+                }
+            });
         }
     }
+
 }
