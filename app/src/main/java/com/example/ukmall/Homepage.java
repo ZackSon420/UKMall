@@ -29,6 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -40,6 +42,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     RecyclerViewAdapter recyclerViewAdapter;
     ArrayList<Product> productArrayList;
     FirebaseFirestore db;
+    StorageReference storage;
 
     //button search
     ImageView  iv_searchproduct;
@@ -72,6 +75,9 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
         db = FirebaseFirestore.getInstance();
         productArrayList = new ArrayList<Product>();
         recyclerViewAdapter=new RecyclerViewAdapter(Homepage.this, productArrayList);
+
+//        Reference storage
+        //storage = FirebaseStorage.getInstance().getReference("product_images/");
 
         //Adapter ada dalam kelas Java baru named "RecyclerViewAdapter"
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -139,31 +145,6 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
 
     }
 
-//    private void EventChangeListener() {
-//
-//        db.collection("store") // Order product placement ikut nama
-//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//
-//                        if(error != null){
-//                            Log.e("Firestore Error", error.getMessage());
-//                            return;
-//                        }
-//
-//                        for(DocumentChange dc : value.getDocumentChanges()){
-//                            if(dc.getType()==DocumentChange.Type.ADDED){
-//                                productArrayList.add(dc.getDocument().toObject(Product.class));
-//                            }
-//                        }
-//
-//                       recyclerViewAdapter.notifyDataSetChanged();
-//
-//                    }
-//                });
-//
-//    }
-
     public void show_username(){
         Intent intent = getIntent();
 
@@ -178,7 +159,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
         switch (view.getId()){
 
             case R.id.iv_searchprod:
-                Toast.makeText(this, "This is Search Function", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "This is Search Function", Toast.LENGTH_LONG).show();
                 break;
         }
     }
