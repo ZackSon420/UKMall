@@ -106,6 +106,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
                         return true;
 
                     case R.id.addtocart:
+                        startActivity(new Intent(getApplicationContext(), Cart.class));
                         Toast.makeText(Homepage.this, "Add to Cart", Toast.LENGTH_SHORT).show();
                         return true;
 
