@@ -1,6 +1,8 @@
 package com.example.ukmall;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,36 +13,57 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.example.ukmall.utils.model.Item;
+import com.example.ukmall.viewmodel.CartViewModel;
 
-public class Cart extends AppCompatActivity implements View.OnClickListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Cart extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners {
 
     private RecyclerView cartView;
     RecyclerView.LayoutManager cartlayoutManager;
     CartAdapter cartAdapter;
+    private CartViewModel cartViewModel;
+    private TextView totalCartPriceTV;
 
     Button bt_CheckOut;
 
     //Ganti dengan data dalam firebase
-    int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies,
-            R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
+//    int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies,
+//            R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart_activity);
 
+        totalCartPriceTV=findViewById(R.id.tv_totalprce);
         bt_CheckOut=findViewById(R.id.bt_checkout);
         bt_CheckOut.setOnClickListener(this);
+        //CartViewModel
+        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
         //RecyclerView Cart
         cartView = findViewById(R.id.rv_cart);
         cartlayoutManager = new GridLayoutManager(this, 1);
         cartView.setLayoutManager(cartlayoutManager);
-        cartAdapter = new CartAdapter(arr);
+        cartAdapter = new CartAdapter(this);
 
         cartView.setAdapter(cartAdapter);
         cartView.setHasFixedSize(true);
+
+        cartViewModel.getAllCartItems().observe(this, new Observer<List<Item>>() {
+            @Override
+            public void onChanged(List<Item> shoeCarts) {
+                double price = 0;
+                cartAdapter.setItemCartList(shoeCarts);
+                for (int i=0;i<shoeCarts.size();i++){
+                    price = price + shoeCarts.get(i).getTotalItemPrice();
+                }
+                totalCartPriceTV.setText(String.valueOf(price));
+            }
+        });
     }
 
 
@@ -52,6 +75,31 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
                 Toast.makeText(this, "Checkout Button", Toast.LENGTH_SHORT).show();
                 break;
 
+        }
+    }
+
+    @Override
+    public void onDeleteClicked(Item item) {
+        cartViewModel.deleteCartItem(item);
+    }
+
+    @Override
+    public void onPlusClicked(Item item) {
+        int quantity = item.getQuantity() + 1;
+        cartViewModel.updateQuantity(item.getItemID() , quantity);
+        cartViewModel.updatePrice(item.getItemID() , quantity*item.getItemPrice());
+        cartAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMinusClicked(Item item) {
+        int quantity = item.getQuantity() - 1;
+        if (quantity != 0){
+            cartViewModel.updateQuantity(item.getItemID() , quantity);
+            cartViewModel.updatePrice(item.getItemID() , quantity*item.getItemPrice());
+            cartAdapter.notifyDataSetChanged();
+        }else{
+            cartViewModel.deleteCartItem(item);
         }
     }
 }

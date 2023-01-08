@@ -2,6 +2,8 @@ package com.example.ukmall;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.ukmall.utils.model.Item;
+import com.example.ukmall.viewmodel.CartViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,6 +31,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 
@@ -48,6 +53,8 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     private ImageSlider imageSlider;
     String img, img2;
     Integer quantity = 1;
+    private List<Item> itemCartList;
+    private CartViewModel viewModel;
 
     //Retrieve data manually
     /*FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -80,6 +87,8 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         btnViewProduct.setOnClickListener(this);
         btnAddToCart.setOnClickListener(this);
         btnBuyNow.setOnClickListener(this);
+        itemCartList = new ArrayList<>();
+        viewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
         //get data from RecyclerView
         Intent intent = getIntent();
@@ -95,6 +104,15 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         //slideModels.add(new SlideModel(img2, ScaleTypes.CENTER_INSIDE));
 
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+
+        viewModel.getAllCartItems().observe(this, new Observer<List<Item>>() {
+            @Override
+            public void onChanged(List<Item> itemCarts) {
+                itemCartList.addAll(itemCarts);
+            }
+        });
+
 
         // BottomNavigationView
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottomNavigation);
@@ -116,6 +134,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                         return true;
 
                     case R.id.addtocart:
+
                         Toast.makeText(ProductDetails.this, "Add to Cart", Toast.LENGTH_SHORT).show();
                         return true;
 
@@ -132,6 +151,44 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                 return false;
             }
         });
+
+    }
+
+    private void insertToRoom() {
+        Item item = new Item();
+        Intent intent = getIntent();
+        item.setItemName(intent.getStringExtra("productName"));
+       // item.setShoeBrandName(shoe.getShoeBrandName());
+        String prd= intent.getStringExtra("productPrice");
+        String str = prd.substring(2);
+
+        item.setItemPrice(Double.parseDouble(str));
+        item.setItemImage(intent.getStringExtra("productImage"));
+
+        final int[] quantity = {1};
+        final int[] id = new int[1];
+
+        if (!itemCartList.isEmpty()){
+            for(int i=0;i<itemCartList.size();i++){
+                if (item.getItemName().equals(itemCartList.get(i).getItemName())){
+                    quantity[0] = itemCartList.get(i).getQuantity();
+                    quantity[0]++;
+                    id[0] = itemCartList.get(i).getItemID();
+                }
+            }
+        }
+
+        if (quantity[0]==1){
+            item.setQuantity(quantity[0]);
+            item.setTotalItemPrice(quantity[0]*item.getItemPrice());
+            viewModel.insertCartItem(item);
+        }else{
+
+            viewModel.updateQuantity(id[0] ,quantity[0]);
+            viewModel.updatePrice(id[0] , quantity[0]*item.getItemPrice());
+        }
+
+        startActivity(new Intent(ProductDetails.this , Cart.class));
 
     }
 
@@ -182,8 +239,11 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
     //function add to cart
     private void addToCart() {
-        if(quantity > 0)
+        if(quantity > 0) {
+            insertToRoom();
             Toast.makeText(ProductDetails.this, "Item were added to cart", Toast.LENGTH_SHORT).show();
+
+        }
         else
             Toast.makeText(ProductDetails.this, "Please select at least 1 quantity", Toast.LENGTH_SHORT).show();
 
