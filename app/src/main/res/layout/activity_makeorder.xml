@@ -45,8 +45,8 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_cart"
-                android:layout_width="381dp"
-                android:layout_height="264dp"
+                android:layout_width="378dp"
+                android:layout_height="175dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -184,12 +184,12 @@
                 android:layout_height="1dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="55dp"
                 android:background="@android:color/darker_gray"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_RM" />
 
             <TextView
                 android:id="@+id/tv_texttotal"
@@ -212,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="9dp"
-                android:text="00.00"
+                android:text="15.00"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -234,18 +234,16 @@
                 app:layout_constraintEnd_toStartOf="@+id/tv_totalprice"
                 app:layout_constraintTop_toTopOf="@+id/tv_totalprice" />
 
+            <Button
+                android:id="@+id/BtnMakeorder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Place Order"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="557dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:text="Place Order"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCheckout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
