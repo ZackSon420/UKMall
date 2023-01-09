@@ -53,8 +53,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Product product = productArrayList.get(position);
         //Ambil gambar dari link dalam product
         Picasso.get().load(product.getUrl()).into(holder.iv_product);
-        holder.tv_prodname.setText(product.name);
-        holder.tv_prodprice.setText(String.valueOf(product.price));
+        holder.tv_prodname.setText(product.productTitle);
+        holder.tv_prodprice.setText(String.valueOf(product.originalPrice));
 //        holder.iv_addtocart.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -91,12 +91,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     //pass data to Product Details activity
                     Intent intent = new Intent(itemView.getContext(),ProductDetails.class);
                     Product selectedProduct = productArrayList.get(index);
-                    intent.putExtra("productName",selectedProduct.getName());
-                    intent.putExtra("productDesc",selectedProduct.getDescription());
+                    intent.putExtra("productName",selectedProduct.getProductTitle());
+                    intent.putExtra("productDesc",selectedProduct.getProductDescription());
                     intent.putExtra("productImage",String.valueOf(selectedProduct.getUrl()));
                     intent.putExtra("productImage2",String.valueOf(selectedProduct.getUrl2()));
-                    intent.putExtra("store",selectedProduct.getStore());
-                    intent.putExtra("productPrice", "RM" + String.valueOf(selectedProduct.getPrice()));
+//                    intent.putExtra("store",selectedProduct.getStore());
+                    intent.putExtra("productPrice", "RM" + String.valueOf(selectedProduct.getOriginalPrice()));
 
                     itemView.getContext().startActivity(intent);
                 }

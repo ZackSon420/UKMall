@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,40 +18,75 @@ import com.example.ukmall.utils.model.Item;
 import com.example.ukmall.viewmodel.CartViewModel;
 
 import java.io.Serializable;
+import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cart extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners, Serializable {
+public class MakeOrder extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners, Serializable{
 
-    private RecyclerView cartView;
-    RecyclerView.LayoutManager cartlayoutManager;
-    CartAdapter cartAdapter;
-    private CartViewModel cartViewModel;
-    private TextView totalCartPriceTV;
-    public List<Item> selectedProductList;
-
-    Button bt_CheckOut;
-
-    //Ganti dengan data dalam firebase
-//    int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies,
-//            R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
+    /*private RecyclerView makeOrderView;
+    MakeOrderAdapter makeOrderAdapter;
+    RecyclerView.LayoutManager makeOrderLayoutManager;
+    Button btnMakeOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cart_activity);
+        setContentView(R.layout.activity_makeorder);
+
+        btnMakeOrder = findViewById(R.id.btn_make_order);
+
+        //recyclerView products
+        makeOrderView = findViewById(R.id.rv_makeorder);
+        //makeOrderList = new ArrayList<Item>();
+        //makeOrderView.setAdapter(MakeOrderAdapter);
+        makeOrderLayoutManager = new GridLayoutManager(MakeOrder.this, 1);
+        makeOrderView.setLayoutManager(makeOrderLayoutManager);
+
+        List<Item> allSelectedProduct = getSelectedProduct();
+        MakeOrderAdapter makeOrderAdapter = new MakeOrderAdapter(MakeOrder.this, allSelectedProduct);
+        makeOrderView.setAdapter(makeOrderAdapter);
+    }
+
+    private List<Item> getSelectedProduct() {
+        List<Item> allSelectedProduct = new ArrayList<Item>();
+
+        /*Intent intent = getIntent();
+        Bundle bundle = intent.getBundleExtra("Bundle");
+        ArrayList<Item> object = (ArrayList<Item>) bundle.getSerializable("SelectedProduct");
+
+        allSelectedProduct.addAll(object);
+
+        return allSelectedProduct;
+    }*/
+
+    //COPY FROM CART
+
+    private RecyclerView cartView;
+    RecyclerView.LayoutManager cartlayoutManager;
+    MakeOrderAdapter cartAdapter;
+    private CartViewModel cartViewModel;
+    private TextView totalCartPriceTV;
+    public List<Item> selectedProductList;
+
+    Button btnMakeOrder;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_makeorder);
 
         totalCartPriceTV=findViewById(R.id.tv_totalprice);
-        bt_CheckOut=findViewById(R.id.bt_checkout);
-        bt_CheckOut.setOnClickListener(this);
+        btnMakeOrder=findViewById(R.id.btn_make_order);
+        btnMakeOrder.setOnClickListener(this);
         //CartViewModel
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
         //RecyclerView Cart
-        cartView = findViewById(R.id.rv_cart);
+        cartView = findViewById(R.id.rv_makeorder);
         cartlayoutManager = new GridLayoutManager(this, 1);
         cartView.setLayoutManager(cartlayoutManager);
-        cartAdapter = new CartAdapter(this);
+        cartAdapter = new MakeOrderAdapter(this);
 
         cartView.setAdapter(cartAdapter);
         cartView.setHasFixedSize(true);
@@ -71,47 +107,23 @@ public class Cart extends AppCompatActivity implements View.OnClickListener,Cart
         });
     }
 
-
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            //Button checkout, nanti ganti dengan intent.
-            case R.id.bt_checkout:
-                Toast.makeText(this, "Checkout Button", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Cart.this,MakeOrder.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("SelectedProduct",(Serializable) selectedProductList);
-                intent.putExtra("Bundle", bundle);
-                startActivity(intent);
 
-                startActivity(new Intent(Cart.this, MakeOrder.class));
-                break;
-
-        }
     }
 
     @Override
     public void onDeleteClicked(Item item) {
-        cartViewModel.deleteCartItem(item);
+
     }
 
     @Override
     public void onPlusClicked(Item item) {
-        int quantity = item.getQuantity() + 1;
-        cartViewModel.updateQuantity(item.getItemID() , quantity);
-        cartViewModel.updatePrice(item.getItemID() , quantity*item.getItemPrice());
-        cartAdapter.notifyDataSetChanged();
+
     }
 
     @Override
     public void onMinusClicked(Item item) {
-        int quantity = item.getQuantity() - 1;
-        if (quantity != 0){
-            cartViewModel.updateQuantity(item.getItemID() , quantity);
-            cartViewModel.updatePrice(item.getItemID() , quantity*item.getItemPrice());
-            cartAdapter.notifyDataSetChanged();
-        }else{
-            cartViewModel.deleteCartItem(item);
-        }
+
     }
 }

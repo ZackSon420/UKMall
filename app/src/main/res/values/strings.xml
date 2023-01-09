@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">UKMall</string>
+
+    <string-array name="paymentMethod">
+        <item>Cash</item>
+        <item>FPX</item>
+        <item>Card Credit</item>
+    </string-array>
+
+    <string-array name="deliveryMethod">
+        <item>Self Pickup</item>
+        <item>Delivery</item>
+    </string-array>
 </resources>

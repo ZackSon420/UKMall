@@ -119,13 +119,15 @@ public class Add_Product extends AppCompatActivity {
         });
     }
 
-    private String productTitle, productDescription, productCategory,productQuantity,productPrice;
+    private String productTitle, productDescription, productCategory,productQuantity, productPriceStr;
+    private Integer originalPrice;
     private void inputData() {
         productTitle=titleEt.getText().toString().trim();
         productDescription=descriptionEt.getText().toString().trim();
         productCategory=categoryEt.getText().toString().trim();
         productQuantity=quantityEt.getText().toString().trim();
-        productPrice=priceEt.getText().toString().trim();
+        productPriceStr=priceEt.getText().toString().trim();
+        originalPrice=Integer.valueOf(productPriceStr);
 
         if(TextUtils.isEmpty(productTitle)){
             Toast.makeText(this, "Title is required...", Toast.LENGTH_SHORT).show();
@@ -143,7 +145,7 @@ public class Add_Product extends AppCompatActivity {
             Toast.makeText(this, "Quantity is required...", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(productPrice)){
+        if(TextUtils.isEmpty(productPriceStr)){
             Toast.makeText(this, "Price is required...", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -162,8 +164,8 @@ public class Add_Product extends AppCompatActivity {
             hashMap.put("productDescription", "" + productDescription);
             hashMap.put("productCategory", "" + productCategory);
             hashMap.put("productQuantity", "" + productQuantity);
-            hashMap.put("productIcon", ""); // no image, set empty
-            hashMap.put("originalPrice", "" + productPrice);
+            hashMap.put("url", ""); // no image, set empty
+            hashMap.put("originalPrice", originalPrice);
             hashMap.put("timestamp", "" + timestamp);
 
             // Then, add the data to the database by calling the "add" method and passing it the collection name and the data
@@ -207,8 +209,8 @@ public class Add_Product extends AppCompatActivity {
                                 hashMap.put("productDescription",""+productDescription);
                                 hashMap.put("productCategory", ""+productCategory);
                                 hashMap.put("productQuantity", ""+productQuantity);
-                                hashMap.put("productIcon", ""+downloadImageUrl);
-                                hashMap.put("originalPrice", ""+productPrice);
+                                hashMap.put("url", ""+downloadImageUrl);
+                                hashMap.put("originalPrice", originalPrice);
                                 hashMap.put("timestamp",""+timestamp);
 
                                 // Then, add the data to the database by calling the "add" method and passing it the collection name and the data

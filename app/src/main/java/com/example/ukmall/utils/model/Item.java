@@ -13,10 +13,8 @@ public class Item {
     @PrimaryKey(autoGenerate = true)
     private int itemID;
     private String itemName;
-
     private String itemImage;
     private double itemPrice;
-
 
     private int quantity;
     private double totalItemPrice;
