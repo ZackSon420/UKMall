@@ -62,6 +62,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
         tv_userName = findViewById(R.id.tv_userName);
         show_username();
 
+
         //button search
         iv_searchproduct=findViewById(R.id.iv_searchprod);
         iv_searchproduct.setOnClickListener(this);

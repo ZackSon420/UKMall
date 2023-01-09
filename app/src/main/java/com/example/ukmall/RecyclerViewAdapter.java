@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ukmall.utils.model.Item;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -54,6 +55,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Picasso.get().load(product.getUrl()).into(holder.iv_product);
         holder.tv_prodname.setText(product.name);
         holder.tv_prodprice.setText(String.valueOf(product.price));
+//        holder.iv_addtocart.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                itemClickedListeners.onAddToCartBtnClicked(product);
+//            }
+//        });
     }
 
     @Override
@@ -66,6 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         ImageView iv_product;
         TextView tv_prodname,tv_prodprice;
+        ImageView iv_addtocart;
         //Kena create lagi satu untuk rating
 
         public MyViewHolder(@NonNull View itemView) {
@@ -73,6 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             iv_product=itemView.findViewById(R.id.img_product);
             tv_prodname=itemView.findViewById(R.id.tv_nameproduct);
             tv_prodprice=itemView.findViewById(R.id.tv_priceproduct);
+            iv_addtocart=itemView.findViewById(R.id.bt_addtocart);
 
             //call selected product data
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -94,5 +103,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             });
         }
     }
+
+//    public interface itemClickedListeners{
+//        void onAddToCartBtnClicked(Product item);
+//    }
 
 }
