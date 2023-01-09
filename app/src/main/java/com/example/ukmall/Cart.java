@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,15 +16,18 @@ import android.widget.Toast;
 import com.example.ukmall.utils.model.Item;
 import com.example.ukmall.viewmodel.CartViewModel;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Cart extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners {
+public class Cart extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners, Serializable {
 
     private RecyclerView cartView;
     RecyclerView.LayoutManager cartlayoutManager;
     CartAdapter cartAdapter;
     private CartViewModel cartViewModel;
     private TextView totalCartPriceTV;
+    public List<Item> selectedProductList;
 
     Button bt_CheckOut;
 
@@ -53,14 +57,17 @@ public class Cart extends AppCompatActivity implements View.OnClickListener,Cart
 
         cartViewModel.getAllCartItems().observe(this, new Observer<List<Item>>() {
             @Override
-            public void onChanged(List<Item> shoeCarts) {
+            public void onChanged(List<Item> productCarts) {
                 double price = 0;
-                cartAdapter.setItemCartList(shoeCarts);
-                for (int i=0;i<shoeCarts.size();i++){
-                    price = price + shoeCarts.get(i).getTotalItemPrice();
+                cartAdapter.setItemCartList(productCarts);
+                for (int i=0;i<productCarts.size();i++){
+                    price = price + productCarts.get(i).getTotalItemPrice();
                 }
+                //selectedProductList.addAll(productCarts);
                 totalCartPriceTV.setText(String.valueOf(price));
+
             }
+
         });
     }
 
@@ -71,6 +78,13 @@ public class Cart extends AppCompatActivity implements View.OnClickListener,Cart
             //Button checkout, nanti ganti dengan intent.
             case R.id.bt_checkout:
                 Toast.makeText(this, "Checkout Button", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Cart.this,MakeOrder.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("SelectedProduct",(Serializable) selectedProductList);
+                intent.putExtra("Bundle", bundle);
+                startActivity(intent);
+
+                startActivity(new Intent(Cart.this, MakeOrder.class));
                 break;
 
         }
