@@ -37,7 +37,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout6"
+        android:id="@+id/linearLayoutCheckout"
         android:layout_width="413dp"
         android:layout_height="581dp"
         android:orientation="horizontal"
@@ -84,7 +84,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/tv_totalprce"
+                android:id="@+id/tv_totalprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
@@ -105,9 +105,9 @@
                 android:text="RM"
                 android:textColor="#000000"
                 android:textSize="21sp"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_totalprce"
-                app:layout_constraintEnd_toStartOf="@+id/tv_totalprce"
-                app:layout_constraintTop_toTopOf="@+id/tv_totalprce" />
+                app:layout_constraintBottom_toBottomOf="@+id/tv_totalprice"
+                app:layout_constraintEnd_toStartOf="@+id/tv_totalprice"
+                app:layout_constraintTop_toTopOf="@+id/tv_totalprice" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
@@ -119,7 +119,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCheckout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

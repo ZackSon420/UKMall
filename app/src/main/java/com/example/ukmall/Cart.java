@@ -9,14 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ukmall.utils.model.Item;
 import com.example.ukmall.viewmodel.CartViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Cart extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners {
@@ -38,7 +36,7 @@ public class Cart extends AppCompatActivity implements View.OnClickListener,Cart
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart_activity);
 
-        totalCartPriceTV=findViewById(R.id.tv_totalprce);
+        totalCartPriceTV=findViewById(R.id.tv_totalprice);
         bt_CheckOut=findViewById(R.id.bt_checkout);
         bt_CheckOut.setOnClickListener(this);
         //CartViewModel
