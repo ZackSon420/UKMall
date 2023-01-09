@@ -14,7 +14,7 @@
         android:gravity="center_horizontal|center_vertical"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintHorizontal_bias="0.888"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -32,9 +32,10 @@
 
     <LinearLayout
         android:id="@+id/linearLayoutCheckout"
-        android:layout_width="410dp"
-        android:layout_height="582dp"
+        android:layout_width="415dp"
+        android:layout_height="577dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
@@ -43,22 +44,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_cart"
-                android:layout_width="378dp"
-                android:layout_height="175dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/tvSelectedProduct"
-                app:layout_constraintTop_toBottomOf="@+id/tvSelectedProduct" />
-
             <TextView
                 android:id="@+id/tvSelectedProduct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="24dp"
                 android:text="Selected product :"
                 android:textColor="#000000"
                 android:textSize="14sp"
@@ -66,6 +56,14 @@
                 app:layout_constraintHorizontal_bias="0.053"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_makeorder"
+                android:layout_width="380dp"
+                android:layout_height="232dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSelectedProduct" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -77,7 +75,7 @@
                 android:textColor="#000000"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_cart" />
+                app:layout_constraintTop_toBottomOf="@+id/rv_makeorder" />
 
             <Spinner
                 android:id="@+id/spinner_paymentMethod"
@@ -183,21 +181,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="56dp"
+                android:layout_marginBottom="2dp"
                 android:background="@android:color/darker_gray"
-                app:layout_constraintBottom_toBottomOf="@+id/BtnMakeorder"
+                app:layout_constraintBottom_toTopOf="@+id/tv_texttotal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_RM"
-                app:layout_constraintVertical_bias="0.258" />
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <TextView
                 android:id="@+id/tv_texttotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:text="Total"
@@ -206,16 +204,15 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView9"
-                app:layout_constraintVertical_bias="0.072" />
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <TextView
                 android:id="@+id/tv_totalprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="28dp"
+                android:layout_marginEnd="30dp"
                 android:layout_marginBottom="9dp"
-                android:text="15.00"
+                android:text="00.00"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -237,18 +234,33 @@
                 app:layout_constraintEnd_toStartOf="@+id/tv_totalprice"
                 app:layout_constraintTop_toTopOf="@+id/tv_totalprice" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="420dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
             <Button
-                android:id="@+id/BtnMakeorder"
+                android:id="@+id/btn_make_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:text="Place Order"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_RM" />
-
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
