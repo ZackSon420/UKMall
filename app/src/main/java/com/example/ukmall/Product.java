@@ -1,56 +1,67 @@
 package com.example.ukmall;
 
 public class Product {
-    String name, description, url, url2, store;
-    Integer price;
+    String productTitle, productDescription, url, url2, productStore;
+    Integer originalPrice;
 
     public Product(){
     }
 
-    public Product(String name, Integer price, String description, String url, String url2, String store) {
-        this.name = name;
-        this.price = price;
-        this.description = description;
+    public Product(String productTitle, String productDescription, String url, String url2, String productStore, Integer originalPrice) {
+        this.productTitle = productTitle;
+        this.productDescription = productDescription;
         this.url = url;
         this.url2 = url2;
-        this.store = store;
-
+        this.productStore = productStore;
+        this.originalPrice = originalPrice;
     }
 
-    public String getStore() { return store; }
-
-    public void setStore(String store) { this.store = store; }
-
-    public String getUrl2() { return url2; }
-
-    public void setUrl2(String url2) { this.url2 = url2; }
-
-    public String getUrl() { return url; }
-
-    public void setUrl(String url) { this.url = url; }
-
-    public String getDescription() {
-        return description;
+    public String getProductTitle() {
+        return productTitle;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setProductTitle(String productTitle) {
+        this.productTitle = productTitle;
     }
 
-    public String getName() {
-        return name;
+    public String getProductDescription() {
+        return productDescription;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
     }
 
-    public Integer getPrice() {
-        return price;
+    public String getUrl() {
+        return url;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl2() {
+        return url2;
+    }
+
+    public void setUrl2(String url2) {
+        this.url2 = url2;
+    }
+
+    public String getProductStore() {
+        return productStore;
+    }
+
+    public void setProductStore(String productStore) {
+        this.productStore = productStore;
+    }
+
+    public Integer getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(Integer originalPrice) {
+        this.originalPrice = originalPrice;
     }
 }
 
