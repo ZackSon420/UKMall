@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -58,8 +59,9 @@ public class MakeOrder extends AppCompatActivity {
         String timestamp = "" + System.currentTimeMillis();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("orderId", ""+timestamp);
+        hashMap.put("orderId", "ORD"+timestamp);
         hashMap.put("orderStatus", orderStatus);
         hashMap.put("totalPrice", totalPrice);
         hashMap.put("paymentMethod", paymentMethodStr);
