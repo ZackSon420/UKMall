@@ -2,12 +2,12 @@ package com.example.ukmall;
 
 public class Product {
     String productTitle, productDescription, url, url2, productStore;
-    Integer originalPrice;
+    Double originalPrice;
 
     public Product(){
     }
 
-    public Product(String productTitle, String productDescription, String url, String url2, String productStore, Integer originalPrice) {
+    public Product(String productTitle, String productDescription, String url, String url2, String productStore,Double originalPrice) {
         this.productTitle = productTitle;
         this.productDescription = productDescription;
         this.url = url;
@@ -56,11 +56,11 @@ public class Product {
         this.productStore = productStore;
     }
 
-    public Integer getOriginalPrice() {
+    public Double getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(Integer originalPrice) {
+    public void setOriginalPrice(Double originalPrice) {
         this.originalPrice = originalPrice;
     }
 }

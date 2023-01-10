@@ -21,6 +21,9 @@ public class CartRepo {
         return allCartItemsLiveData;
     }
 
+    public CartRepo() {
+    }
+
     public CartRepo(Application application){
         cartDAO = CartDatabase.getInstance(application).cartDAO();
         allCartItemsLiveData = cartDAO.getAllCartItems();
