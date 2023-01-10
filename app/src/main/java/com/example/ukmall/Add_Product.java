@@ -119,15 +119,17 @@ public class Add_Product extends AppCompatActivity {
         });
     }
 
-    private String productTitle, productDescription, productCategory,productQuantity, productPriceStr;
-    private Integer originalPrice;
+    private String productTitle, productDescription, productCategory,productQuantityStr, productPriceStr;
+    private Integer productQuantity;
+    private Double originalPrice;
     private void inputData() {
         productTitle=titleEt.getText().toString().trim();
         productDescription=descriptionEt.getText().toString().trim();
         productCategory=categoryEt.getText().toString().trim();
-        productQuantity=quantityEt.getText().toString().trim();
-        productPriceStr=priceEt.getText().toString().trim();
-        originalPrice=Integer.valueOf(productPriceStr);
+        productQuantityStr=quantityEt.getText().toString().trim();
+        productQuantity=Integer.valueOf(productQuantityStr);
+        productPriceStr=priceEt.getText().toString();
+        originalPrice=Double.valueOf(String.valueOf(productPriceStr));
 
         if(TextUtils.isEmpty(productTitle)){
             Toast.makeText(this, "Title is required...", Toast.LENGTH_SHORT).show();
@@ -141,7 +143,7 @@ public class Add_Product extends AppCompatActivity {
             Toast.makeText(this, "Category is required...", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(productQuantity)){
+        if(TextUtils.isEmpty(productQuantityStr)){
             Toast.makeText(this, "Quantity is required...", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -156,36 +158,33 @@ public class Add_Product extends AppCompatActivity {
     private void addProduct() {
         String timestamp = "" + System.currentTimeMillis();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String productid = "PROD"+timestamp;
 
         if (image_uri == null) {
             HashMap<String, Object> hashMap = new HashMap();
-            hashMap.put("productId", "" + timestamp);
+            hashMap.put("productId", productid);
             hashMap.put("productTitle", "" + productTitle);
             hashMap.put("productDescription", "" + productDescription);
             hashMap.put("productCategory", "" + productCategory);
-            hashMap.put("productQuantity", "" + productQuantity);
-            hashMap.put("url", ""); // no image, set empty
+            hashMap.put("productQuantity", productQuantity);
+            hashMap.put("url", "https://firebasestorage.googleapis.com/v0/b/ukmall-f47b3.appspot.com/o/product_images%2FOIP.jpg?alt=media&token=c401a8ef-f83b-4ce9-ba3b-48a432b05e2d"); // set path for no image file
             hashMap.put("originalPrice", originalPrice);
-            hashMap.put("timestamp", "" + timestamp);
 
-            // Then, add the data to the database by calling the "add" method and passing it the collection name and the data
-            db.collection("product").add(hashMap)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            // The product was successfully added to the database
-                            Toast.makeText(Add_Product.this, "Product Added Succesfully", Toast.LENGTH_SHORT).show();
-                            clearData();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // There was an error adding the product to the database
-                            Toast.makeText(Add_Product.this, "Failed to Add Product", Toast.LENGTH_SHORT).show();
-                        }
-                    });
 
+            db.collection("product").document(productid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    // The product was successfully added to the database
+                    Toast.makeText(Add_Product.this, "Product Added Succesfully", Toast.LENGTH_SHORT).show();
+                    clearData();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // There was an error adding the product to the database
+                    Toast.makeText(Add_Product.this, "Failed to Add Product", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         } else {
 
@@ -204,33 +203,28 @@ public class Add_Product extends AppCompatActivity {
 
                             if(uriTask.isSuccessful()){
                                 HashMap<String, Object> hashMap = new HashMap();
-                                hashMap.put("productId", ""+timestamp);
+                                hashMap.put("productId", productid);
                                 hashMap.put("productTitle",""+ productTitle);
                                 hashMap.put("productDescription",""+productDescription);
                                 hashMap.put("productCategory", ""+productCategory);
-                                hashMap.put("productQuantity", ""+productQuantity);
+                                hashMap.put("productQuantity",productQuantity);
                                 hashMap.put("url", ""+downloadImageUrl);
                                 hashMap.put("originalPrice", originalPrice);
-                                hashMap.put("timestamp",""+timestamp);
 
-                                // Then, add the data to the database by calling the "add" method and passing it the collection name and the data
-                                db.collection("product").add(hashMap)
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                // The product was successfully added to the database
-                                                Toast.makeText(Add_Product.this, "Product Added Succesfully", Toast.LENGTH_SHORT).show();
-                                                clearData();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                // There was an error adding the product to the database
-                                                Toast.makeText(Add_Product.this, "Failed to Add Product", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-
+                                db.collection("product").document(productid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        // The product was successfully added to the database
+                                        Toast.makeText(Add_Product.this, "Product Added Succesfully", Toast.LENGTH_SHORT).show();
+                                        clearData();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // There was an error adding the product to the database
+                                        Toast.makeText(Add_Product.this, "Failed to Add Product", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
 
                         }

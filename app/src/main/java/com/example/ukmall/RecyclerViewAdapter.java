@@ -54,7 +54,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //Ambil gambar dari link dalam product
         Picasso.get().load(product.getUrl()).into(holder.iv_product);
         holder.tv_prodname.setText(product.productTitle);
-        holder.tv_prodprice.setText(String.valueOf(product.originalPrice));
+        holder.tv_prodprice.setText("RM" + product.originalPrice);
 //        holder.iv_addtocart.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
