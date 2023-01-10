@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.io.Serializable;
@@ -43,6 +45,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     private CartViewModel cartViewModel;
     private TextView totalCartPriceTV;
     public List<Item> selectedProductList;
+    private ArrayList<Object> arrayOrder = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +83,23 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onChanged(List<Item> productCarts) {
                 double price = 0;
+
                 cartAdapter.setItemCartList(productCarts);
                 for (int i=0;i<productCarts.size();i++){
+                    String itemName;
+                    Double itemPrice;
+                    Integer quantity;
                     price = price + productCarts.get(i).getTotalItemPrice();
+
+                    itemName = productCarts.get(i).getItemName();
+                    itemPrice = productCarts.get(i).getItemPrice();
+                    quantity = productCarts.get(i).getQuantity();
+
+                    HashMap<String, Object> prodhashMap = new HashMap<>();
+                    prodhashMap.put("itemName", itemName);
+                    prodhashMap.put("itemPrice", itemPrice);
+                    prodhashMap.put("quantity", quantity);
+                    arrayOrder.add(prodhashMap);
                 }
                 //selectedProductList.addAll(productCarts);
                 totalCartPriceTV.setText(String.valueOf(price));
@@ -120,24 +137,30 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         hashMap.put("paymentMethod", paymentMethodStr);
         hashMap.put("deliveryOption", deliveryOptionStr);
 
-//      Dapatkan data product yang diorder
-        HashMap<String, Object> prodhashMap = new HashMap<>();
-        prodhashMap.put("test", "test");
-
         db.collection("order").document(orderid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-        db.collection("order").document(orderid).collection("ordered").add(prodhashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Toast.makeText(MakeOrder.this, "Sub document successful", Toast.LENGTH_SHORT).show();
+            public void onSuccess(Void unused) {
+                Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        for(int i = 0; i<arrayOrder.size();i++){
+
+            db.collection("order").document(orderid).collection("ordered").add(arrayOrder.get(i)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Toast.makeText(MakeOrder.this, "Sub document successful", Toast.LENGTH_SHORT).show();
+
+                    cartViewModel.deleteAllCartItems();
+
+                    Intent intent = new Intent(MakeOrder.this, Homepage.class);
+                    startActivity(intent);
+                }
+            });
+
+        }
+
 
     }
 
