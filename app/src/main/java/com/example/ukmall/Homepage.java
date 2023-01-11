@@ -117,8 +117,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
                         return true;
 
                     case R.id.account:
-                        startActivity(new Intent(getApplicationContext(), Analytics.class));
-                       //Toast.makeText(Homepage.this, "User Account", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Homepage.this, "User Account", Toast.LENGTH_SHORT).show();
                         return true;
 
                 }
