@@ -3,7 +3,6 @@ package com.example.ukmall;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ukmall.viewmodel.CartViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -45,11 +43,9 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     ArrayList<Product> productArrayList;
     FirebaseFirestore db;
     StorageReference storage;
-    private CartViewModel viewModel;
-
 
     //button search
-    ImageView  iv_searchproduct,iv_User;
+    ImageView  iv_searchproduct;
 
     TextView tv_userName;
 
@@ -62,12 +58,6 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_activity);
-
-        viewModel = new ViewModelProvider(this).get(CartViewModel.class);
-
-
-        iv_User=findViewById(R.id.iv_user);
-        iv_User.setOnClickListener(this);
 
         tv_userName = findViewById(R.id.tv_userName);
         show_username();
@@ -123,12 +113,11 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
 
                     case R.id.addproduct:
                         startActivity(new Intent(getApplicationContext(), Add_Product.class));
-                        Toast.makeText(Homepage.this, "Add Product", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Add_Product.class, "Add Product", Toast.LENGTH_SHORT).show();
                         return true;
 
                     case R.id.account:
-                        startActivity(new Intent(getApplicationContext(),Analytics.class));
-                        Toast.makeText(Homepage.this, "Analytics", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Homepage.this, "User Account", Toast.LENGTH_SHORT).show();
                         return true;
 
                 }
@@ -173,13 +162,6 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
 
             case R.id.iv_searchprod:
                 Toast.makeText(this, "This is Search Function", Toast.LENGTH_LONG).show();
-                break;
-
-
-            case R.id.iv_user:
-                startActivity(new Intent(getApplicationContext(),Login.class));
-                Toast.makeText(Homepage.this, "Logout successfully!", Toast.LENGTH_SHORT).show();
-                viewModel.deleteAllCartItems();
                 break;
         }
     }
