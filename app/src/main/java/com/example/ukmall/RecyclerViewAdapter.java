@@ -45,27 +45,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        //Link dengan Firebase
-//        holder.iv_product.setImageResource(arr[position]);
-//        holder.tv_prodname.setText("Brownies (4pcs)");
-//        holder.tv_prodprice.setText("RM10");
+
 
         Product product = productArrayList.get(position);
         //Ambil gambar dari link dalam product
         Picasso.get().load(product.getUrl()).into(holder.iv_product);
         holder.tv_prodname.setText(product.productTitle);
         holder.tv_prodprice.setText("RM" + product.originalPrice);
-//        holder.iv_addtocart.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                itemClickedListeners.onAddToCartBtnClicked(product);
-//            }
-//        });
     }
 
     @Override
     public int getItemCount() {
-//      return arr.length; //Length items dalam firebase
         return productArrayList.size();
     }
 
@@ -74,7 +64,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ImageView iv_product;
         TextView tv_prodname,tv_prodprice;
         ImageView iv_addtocart;
-        //Kena create lagi satu untuk rating
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -88,7 +77,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 @Override
                 public void onClick(View view) {
                     int index = getAdapterPosition();
-                    //pass data to Product Details activity
                     Intent intent = new Intent(itemView.getContext(),ProductDetails.class);
                     Product selectedProduct = productArrayList.get(index);
                     intent.putExtra("productName",selectedProduct.getProductTitle());
@@ -104,8 +92,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-//    public interface itemClickedListeners{
-//        void onAddToCartBtnClicked(Product item);
-//    }
 
 }
