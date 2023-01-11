@@ -24,13 +24,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -56,6 +60,9 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     private List<Item> itemCartList;
     private CartViewModel viewModel;
 
+    FirebaseFirestore db;
+    FirebaseAuth mAuth;
+
     //Retrieve data manually
     /*FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference productRef = db.document("/store/Q9oYbWZLA5Mj7CBee5kK/product/testproduct");
@@ -66,6 +73,11 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
+
+
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         ArrayList<SlideModel> slideModels = new ArrayList<>();
 
@@ -134,17 +146,18 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                         return true;
 
                     case R.id.addtocart:
-
+                        startActivity(new Intent(getApplicationContext(), Cart.class));
                         Toast.makeText(ProductDetails.this, "Add to Cart", Toast.LENGTH_SHORT).show();
                         return true;
 
                     case R.id.addproduct:
                         startActivity(new Intent(getApplicationContext(), Add_Product.class));
-                        //Toast.makeText(Add_Product.class, "Add Product", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProductDetails.this, "Add Product", Toast.LENGTH_SHORT).show();
                         return true;
 
                     case R.id.account:
-                        Toast.makeText(ProductDetails.this, "User Account", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(),Analytics.class));
+                        Toast.makeText(ProductDetails.this, "Analytics", Toast.LENGTH_SHORT).show();
                         return true;
 
                 }
@@ -155,9 +168,14 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     }
 
     private void insertToRoom() {
+
+
+
+
         Item item = new Item();
         Intent intent = getIntent();
         item.setItemName(intent.getStringExtra("productName"));
+
        // item.setShoeBrandName(shoe.getShoeBrandName());
         String prd= intent.getStringExtra("productPrice");
         String str = prd.substring(2);
@@ -188,7 +206,44 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
             viewModel.updatePrice(id[0] , quantity[0]*item.getItemPrice());
         }
 
+        String saveCurrentDate, saveCurrentTime;
+        Calendar calForDate = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
+        saveCurrentDate = currentDate.format(calForDate.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+        saveCurrentTime = currentTime.format(calForDate.getTime());
+
+        final HashMap<String, Object> cartMap = new HashMap<>();
+
+
+        cartMap.put("currentDate",saveCurrentDate);
+        cartMap.put("currentTime",saveCurrentTime);
+
+
+
+        /*cartMap.put("productName",tvProductName.getText().toString());
+        cartMap.put("productPrice",tvProductPrice.getText().toString());
+        cartMap.put("currentDate",saveCurrentDate);
+        cartMap.put("currentTime",saveCurrentTime);
+        cartMap.put("totalQuantity",tvQuantity.getText().toString());
+        cartMap.put("totalPrice",tvProductPrice);*/
+
+
+        db.collection("AddToCart").document(mAuth.getCurrentUser().getUid()).collection("CurrentUser").add(cartMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+
+                finish();
+            }
+        });
+
+
+
+
         startActivity(new Intent(ProductDetails.this , Cart.class));
+
 
     }
 
@@ -239,6 +294,13 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
     //function add to cart
     private void addToCart() {
+
+
+
+
+
+
+
         if(quantity > 0) {
             insertToRoom();
             Toast.makeText(ProductDetails.this, "Item were added to cart", Toast.LENGTH_SHORT).show();
