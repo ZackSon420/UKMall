@@ -1,12 +1,16 @@
 package com.example.ukmall;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -17,6 +21,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -28,7 +33,7 @@ public class Analytics extends AppCompatActivity {
     RecyclerView.LayoutManager productALayoutManager;
     AnalyticsAdapter analyticsAdapter;
     private TextView TotalProductTv, TotalSalesTV, TotalOrderTV;
-    private ArrayList<Order> arrayOrder;
+    ArrayList<Order> arrayOrder;
     int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
 
     private Integer saleTotal;
@@ -84,41 +89,44 @@ public class Analytics extends AppCompatActivity {
 
     private Integer totalSales() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference orderCollection = db.collection("order");
         Double totalSales = 0.0;
 
+        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()){
+                        Order order = document.toObject(Order.class);
+                        arrayOrder.add(order);
+                    }
+                }else{
+                    Toast.makeText(Analytics.this, "Retrieve object failed", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,"failed to retrieve",task.getException());
+                }
+                if(arrayOrder.size()==0){
+                    Log.d("FAILED","Failed To Retrieve");
+                }
+            }
+        });
 
-//        db.collectionGroup("product").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//        db.collectionGroup("order").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //            @Override
 //            public void onComplete(@NonNull Task<QuerySnapshot> task) {
 //                if (task.isSuccessful()) {
 //
 //                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
 //                        if(dc.getType()==DocumentChange.Type.ADDED){
-//                            productArrayList.add(dc.getDocument().toObject(Product.class));
+//                            arrayOrder.add(dc.getDocument().toObject(Order.class));
 //                        }
 //                    }
-//                    recyclerViewAdapter.notifyDataSetChanged();
 //                }
 //            }
 //        });
 
-        db.collectionGroup("order").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-
-                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
-                        if(dc.getType()==DocumentChange.Type.ADDED){
-                            arrayOrder.add(dc.getDocument().toObject(Order.class));
-                        }
-                    }
-                }
-            }
-        });
-
-        for (int i = 0; i<arrayOrder.size(); i++){
-            totalSales = totalSales + arrayOrder.get(i).getTotalPrice();
-        }
+//        for (int i = 0; i<arrayOrder.size(); i++){
+//            totalSales = totalSales + arrayOrder.get(i).getTotalPrice();
+//        }
 
         return arrayOrder.size();
 
