@@ -36,7 +36,7 @@ public class Analytics extends AppCompatActivity {
     ArrayList<Order> arrayOrder;
     int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
 
-    private Integer saleTotal;
+    private Double saleTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,53 +82,76 @@ public class Analytics extends AppCompatActivity {
         });
 
 //      Total Sales
-       saleTotal = totalSales();
-       TotalSalesTV.setText(saleTotal.toString());
-
-    }
-
-    private Integer totalSales() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference orderCollection = db.collection("order");
-        Double totalSales = 0.0;
 
         orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot document : task.getResult()){
+//                        Double totalPrice = document.getDouble("totalPrice");
+//                        saleTotal += totalPrice;
                         Order order = document.toObject(Order.class);
                         arrayOrder.add(order);
                     }
+//                    TotalSalesTV.setText("" +arrayOrder.size());
                 }else{
-                    Toast.makeText(Analytics.this, "Retrieve object failed", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG,"failed to retrieve",task.getException());
+                    Log.d("debug", "Error");
                 }
-                if(arrayOrder.size()==0){
-                    Log.d("FAILED","Failed To Retrieve");
+
+                for (int i = 1; i<arrayOrder.size(); i++){
+                    saleTotal = saleTotal + arrayOrder.get(i).getTotalPrice();
                 }
+
+                TotalSalesTV.setText(String.valueOf(saleTotal));
             }
         });
 
-//        db.collectionGroup("order").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+
+    }
+
+//    private Integer totalSales() {
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        CollectionReference orderCollection = db.collection("order");
+//        Double totalSales = 0.0;
+//
+//        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //            @Override
 //            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//
-//                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
-//                        if(dc.getType()==DocumentChange.Type.ADDED){
-//                            arrayOrder.add(dc.getDocument().toObject(Order.class));
-//                        }
+//                if(task.isSuccessful()){
+//                    for(QueryDocumentSnapshot document : task.getResult()){
+//                        Order order = document.toObject(Order.class);
+//                        arrayOrder.add(order);
 //                    }
+//                }else{
+//                    Toast.makeText(Analytics.this, "Retrieve object failed", Toast.LENGTH_SHORT).show();
+//                    Log.d(TAG,"failed to retrieve",task.getException());
+//                }
+//                if(arrayOrder.size()==0){
+//                    Log.d("FAILED","Failed To Retrieve");
 //                }
 //            }
 //        });
-
-//        for (int i = 0; i<arrayOrder.size(); i++){
-//            totalSales = totalSales + arrayOrder.get(i).getTotalPrice();
-//        }
-
-        return arrayOrder.size();
-
-    }
+//
+////        db.collectionGroup("order").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+////            @Override
+////            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+////                if (task.isSuccessful()) {
+////
+////                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
+////                        if(dc.getType()==DocumentChange.Type.ADDED){
+////                            arrayOrder.add(dc.getDocument().toObject(Order.class));
+////                        }
+////                    }
+////                }
+////            }
+////        });
+//
+////        for (int i = 0; i<arrayOrder.size(); i++){
+////            totalSales = totalSales + arrayOrder.get(i).getTotalPrice();
+////        }
+//
+//        return arrayOrder.size();
+//
+//    }
 }
