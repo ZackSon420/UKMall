@@ -140,7 +140,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         db.collection("order").document(orderid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -150,7 +150,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             db.collection("order").document(orderid).collection("ordered").add(arrayOrder.get(i)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
-                    Toast.makeText(MakeOrder.this, "Sub document successful", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MakeOrder.this, "Sub document successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
 
                     cartViewModel.deleteAllCartItems();
 

@@ -2,12 +2,12 @@ package com.example.ukmall;
 
 public class Order {
     String orderId, paymentMethod, deliveryOption;
-    Integer totalPrice;
+    Double totalPrice;
 
     public Order(){
     }
 
-    public Order(String orderId, String paymentMethod, String deliveryOption, Integer totalPrice) {
+    public Order(String orderId, String paymentMethod, String deliveryOption, Double totalPrice) {
         this.orderId = orderId;
         this.paymentMethod = paymentMethod;
         this.deliveryOption = deliveryOption;
@@ -38,11 +38,11 @@ public class Order {
         this.deliveryOption = deliveryOption;
     }
 
-    public Integer getTotalPrice() {
+    public Double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Integer totalPrice) {
+    public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
 }
