@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ukmall.viewmodel.CartViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,6 +30,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
     Button ButtonLogin;
     TextView signupTV;
     FirebaseAuth mAuth;
+    private SessionManager sessionManager;
+    CartViewModel cartViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +49,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         signupTV.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
+        //Declare Session
+       sessionManager = new SessionManager(this);
+
+
 
 
 
     }
+
 
     @Override
     public void onClick(View view) {
@@ -66,6 +75,18 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
 
         }
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //sessionManager.checkLogin();
+        //Check Session whether User is Logged in.
+        if (sessionManager.isLoggedIn()) {
+            Intent intent = new Intent(Login.this, Homepage.class);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
 
         private void loginUser(){
             String username = usernameET.getText().toString().trim();
@@ -93,28 +114,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-
+                        //Create Session For Each User
+                        sessionManager.createSession(username,password);
                         Intent intent = new Intent(getApplicationContext(), Homepage.class);
-//                        intent.putExtra("name", name);
                         startActivity(intent);
-
-                        //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-//                        DatabaseReference userRef = reference.child(username);
-
-//                        userRef.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                String name = String.valueOf(snapshot.child("name").getValue());
-//
-//
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                            }
-//                        });
+                        finish();
 
 
                     } else {
@@ -124,30 +128,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                 }
             });
 
-           // Toast.makeText(Login.this, "Next Step", Toast.LENGTH_SHORT).show();
-
         }
 
-//        public void readUsername(String email){
-//
-//            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-//            reference.child(email).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DataSnapshot> task) {
-//
-//                    if(task.isSuccessful()){
-//
-//                        if(task.getResult().exists()){
-//                            DataSnapshot snapshot = task.getResult();
-//                            String name = String.valueOf(snapshot.child("name").getValue());
-//                        }
-//
-//                    }else{
-//                        Toast.makeText(Login.this, "Failed", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                }
-//            });
-//        }
     }
 
