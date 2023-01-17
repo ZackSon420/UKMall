@@ -99,10 +99,10 @@ public class Analytics extends AppCompatActivity {
                 }
 
                 for (int i = 1; i<arrayOrder.size(); i++){
-                    saleTotal = saleTotal + arrayOrder.get(i).getTotalPrice();
+                //    saleTotal = saleTotal + arrayOrder.get(i).getTotalPrice();
                 }
 
-                TotalSalesTV.setText(String.valueOf(saleTotal));
+              //  TotalSalesTV.setText(String.valueOf(saleTotal));
             }
         });
 
