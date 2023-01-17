@@ -347,6 +347,23 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         });
 
 
+        //FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //CollectionReference orderDetailRef = db.collection("orderDetail");
+       // Query docRef = orderDetailRef.whereEqualTo("orderId", orderid);
+
+        HashMap<String, Object> hashMap2 = new HashMap<>();
+        hashMap2.put("orderId", orderid);
+        hashMap2.put("customerID", customerID);
+        hashMap2.put("paymentStatus", "Successful");
+
+        db.collection("OrderDetail").document(orderid).set(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        });
+
+
         for(int i = 0; i<arrayOrder.size();i++){
 
             db.collection("order").document(orderid).collection("ordered").add(arrayOrder.get(i)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
