@@ -192,7 +192,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         }
         if(paymentSheetResult instanceof PaymentSheetResult.Canceled){
             Toast.makeText(this,"payment canceled",Toast.LENGTH_SHORT).show();
-            makeOrder();
+           // makeOrder();
         }
     }
 
