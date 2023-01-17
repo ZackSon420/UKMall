@@ -37,8 +37,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         Double totalProductSale = 0.0;
         Double price = 0.0;
         Double quantity = 0.0;
+        Integer index = position+1;
         Item item = itemArrayList.get(position);
-        holder.tvIndex.setText("1");
+        holder.tvIndex.setText(index +".");
         holder.tvProductName.setText(item.getItemName());
         holder.tvProductQuantity.setText(item.getQuantity().toString());
 

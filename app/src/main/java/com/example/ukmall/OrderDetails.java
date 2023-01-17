@@ -14,9 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -27,11 +31,13 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
     RecyclerView.LayoutManager layoutManager;
     OrderDetailsAdapter orderDetailsAdapter;
     ArrayList<Item> itemArrayList;
-    FirebaseFirestore db;
     TextView tvOrderId, tvOrderDate, tvCustName, tvPhoneNumber, tvEmail, tvPayment, tvDelivery, tvTotalPrice;
     Button btnAccept, btnCancel;
     ImageView ivCust;
+    //String documentId;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference orderRef = db.collection("order");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +65,7 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
         layoutManager=new GridLayoutManager(this, 1);
         rvOrderDetails.setLayoutManager(layoutManager);
 
-        db = FirebaseFirestore.getInstance();
+        //db = FirebaseFirestore.getInstance();
         itemArrayList = new ArrayList<Item>();
         orderDetailsAdapter = new OrderDetailsAdapter(OrderDetails.this, itemArrayList);
 
@@ -68,6 +74,7 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
         rvOrderDetails.setHasFixedSize(true);
 
         Intent intent = getIntent();
+        //documentId.set(intent.getStringExtra("orderId")) ;
         tvOrderId.setText(intent.getStringExtra("orderId"));
         tvPayment.setText(intent.getStringExtra("payment"));
         tvDelivery.setText(intent.getStringExtra("delivery"));
@@ -83,6 +90,9 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
     }
 
     private void EventChangeListener() {
+
+        //DISPLAY ALL ITEM DALAM COLLECTION ordered
+        CollectionReference orderRef = db.collection("order");
         db.collectionGroup("ordered").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -97,6 +107,19 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+
+        /*orderRef.document("ORD1673922703602")
+                .collection("ordered").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        String data = "";
+
+                        for (QueryDocumentSnapshot documentSnapshots : queryDocumentSnapshots){
+                            itemArrayList.add(documentSnapshots.toObject(Item.class));
+                        }
+                    }
+                });*/
     }
 
     @Override

@@ -19,45 +19,47 @@
             android:id="@+id/tv_nameproduct"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="40dp"
             android:text="Brownies "
             android:textColor="#091020"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/tv_index"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_index" />
 
         <TextView
             android:id="@+id/tv_quantityorder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
             android:text="10"
             android:textColor="#000000"
             android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/textView13"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.737"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_nameproduct" />
 
         <TextView
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="288dp"
             android:text="RM"
             android:textColor="#000000"
             android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/tv_totalp_productOrder"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_quantityorder" />
 
         <TextView
             android:id="@+id/tv_totalp_productOrder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="1dp"
             android:text="100"
             android:textColor="#000000"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/textView13"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView13"
             app:layout_constraintTop_toTopOf="@+id/textView13"
             app:layout_constraintVertical_bias="0.0" />
 
