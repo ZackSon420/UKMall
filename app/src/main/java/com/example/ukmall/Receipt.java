@@ -28,7 +28,7 @@ public class Receipt extends AppCompatActivity {
 //    ReceiptAdapter receiptAdapter;
 //    CartViewModel cartViewModel;
 //    public List<Item> selectedProductList;
-    TextView priceBought, TVBigPrice;
+    TextView priceBought, TVBigPrice, TVtransacid;
 
 //
 //    @Override
@@ -38,6 +38,7 @@ public class Receipt extends AppCompatActivity {
 
         priceBought = findViewById(R.id.tv_pricebought);
         TVBigPrice = findViewById(R.id.tv_bigprice);
+        TVtransacid = findViewById(R.id.tv_transactionid);
 
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
@@ -60,6 +61,7 @@ public class Receipt extends AppCompatActivity {
         Intent intent = getIntent();
         TVBigPrice.setText(String.valueOf(intent.getDoubleExtra("totalPrice", 0)));
         priceBought.setText(String.valueOf(intent.getDoubleExtra("totalPrice", 0)));
+        TVtransacid.setText(intent.getStringExtra("orderID"));
 
     }
 }

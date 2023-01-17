@@ -377,6 +377,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 
             Intent intent = new Intent(MakeOrder.this, Receipt.class);
             intent.putExtra("totalPrice", totalPrice);
+            intent.putExtra("orderID", orderid);
             startActivity(intent);
 
         }
