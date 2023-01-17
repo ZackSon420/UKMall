@@ -61,7 +61,7 @@ public class ManageOrderAdapter extends RecyclerView.Adapter<ManageOrderAdapter.
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             ivCust=itemView.findViewById(R.id.img_cust);
-            tvCustName=itemView.findViewById(R.id.tv_cust_name);
+            tvCustName=itemView.findViewById(R.id.tv_custname);
             tvOrderId=itemView.findViewById(R.id.tv_order_id);
             tvOrderDate=itemView.findViewById(R.id.tv_date);
             tvTotalOrder=itemView.findViewById(R.id.tv_totalp_order);
