@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
     android:elevation="15dp"
     app:cardBackgroundColor="#E3F2FD"
-    app:cardCornerRadius="15dp">
+    app:cardCornerRadius="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="345dp"
@@ -24,48 +24,48 @@
             android:textColor="#091020"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/rv_number"
-            app:layout_constraintTop_toTopOf="@+id/rv_number" />
+            app:layout_constraintStart_toEndOf="@+id/tv_index"
+            app:layout_constraintTop_toTopOf="@+id/tv_index" />
 
         <TextView
             android:id="@+id/tv_quantityorder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="84dp"
+            android:layout_marginEnd="30dp"
             android:text="10"
             android:textColor="#000000"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/tv_nameproduct"
+            app:layout_constraintEnd_toStartOf="@+id/textView13"
             app:layout_constraintTop_toTopOf="@+id/tv_nameproduct" />
 
         <TextView
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:text="RM"
             android:textColor="#000000"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/tv_quantityorder"
+            app:layout_constraintEnd_toStartOf="@+id/tv_totalp_productOrder"
             app:layout_constraintTop_toTopOf="@+id/tv_quantityorder" />
 
         <TextView
             android:id="@+id/tv_totalp_productOrder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
+            android:layout_marginEnd="16dp"
             android:text="100"
             android:textColor="#000000"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/textView13"
-            app:layout_constraintStart_toEndOf="@+id/textView13"
-            app:layout_constraintTop_toTopOf="@+id/textView13" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView13"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/rv_number"
+            android:id="@+id/tv_index"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:text="1."
             android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"

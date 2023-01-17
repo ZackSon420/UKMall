@@ -1,8 +1,10 @@
 package com.example.ukmall;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +13,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+
 public class OrderDetails extends AppCompatActivity implements View.OnClickListener {
 
+    private RecyclerView rvOrderDetails;
+    RecyclerView.LayoutManager layoutManager;
+    OrderDetailsAdapter orderDetailsAdapter;
+    ArrayList<Item> itemArrayList;
+    FirebaseFirestore db;
     TextView tvOrderId, tvOrderDate, tvCustName, tvPhoneNumber, tvEmail, tvPayment, tvDelivery, tvTotalPrice;
     Button btnAccept, btnCancel;
     ImageView ivCust;
@@ -39,6 +54,19 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
         btnAccept.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
 
+        //recyclerView order details
+        rvOrderDetails = findViewById(R.id.rv_orderDetails);
+        layoutManager=new GridLayoutManager(this, 1);
+        rvOrderDetails.setLayoutManager(layoutManager);
+
+        db = FirebaseFirestore.getInstance();
+        itemArrayList = new ArrayList<Item>();
+        orderDetailsAdapter = new OrderDetailsAdapter(OrderDetails.this, itemArrayList);
+
+        rvOrderDetails.setAdapter(orderDetailsAdapter);
+        EventChangeListener();
+        rvOrderDetails.setHasFixedSize(true);
+
         Intent intent = getIntent();
         tvOrderId.setText(intent.getStringExtra("orderId"));
         tvPayment.setText(intent.getStringExtra("payment"));
@@ -54,6 +82,23 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void EventChangeListener() {
+        db.collectionGroup("ordered").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
+                        if(dc.getType()==DocumentChange.Type.ADDED){
+                            itemArrayList.add(dc.getDocument().toObject(Item.class));
+                        }
+                    }
+                    orderDetailsAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -67,4 +112,5 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
 }

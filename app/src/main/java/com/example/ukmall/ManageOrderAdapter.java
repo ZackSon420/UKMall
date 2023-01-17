@@ -20,11 +20,11 @@ public class ManageOrderAdapter extends RecyclerView.Adapter<ManageOrderAdapter.
     Context context;
     static ArrayList<Order> orderArrayList;
 
+    //Constructor
     public ManageOrderAdapter(Context context, ArrayList<Order> orderArrayList) {
         this.context = context;
         this.orderArrayList = orderArrayList;
     }
-
 
     @NonNull
     @Override
@@ -52,7 +52,6 @@ public class ManageOrderAdapter extends RecyclerView.Adapter<ManageOrderAdapter.
         return orderArrayList.size();
     }
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivCust;
@@ -73,18 +72,19 @@ public class ManageOrderAdapter extends RecyclerView.Adapter<ManageOrderAdapter.
                 public void onClick(View view) {
                     //pass to OrderDetails
                     int index = getAdapterPosition();
-                    /*Intent intent = new Intent(itemView.getContext(),ProductDetails.class);
-                    Product selectedProduct = productArrayList.get(index);
-                    intent.putExtra("productName",selectedProduct.getProductTitle());
-                    intent.putExtra("productDesc",selectedProduct.getProductDescription());
-                    intent.putExtra("productImage",String.valueOf(selectedProduct.getUrl()));
-                    intent.putExtra("productImage2",String.valueOf(selectedProduct.getUrl2()));
-//                    intent.putExtra("store",selectedProduct.getStore());
-                    intent.putExtra("productPrice", "RM" + String.valueOf(selectedProduct.getOriginalPrice()));
+                    Intent intent = new Intent(itemView.getContext(),OrderDetails.class);
+                    Order selectedOrder = orderArrayList.get(index);
+                    intent.putExtra("orderId",selectedOrder.getOrderId());
+                    intent.putExtra("payment",selectedOrder.getPaymentMethod());
+                    intent.putExtra("delivery",selectedOrder.getDeliveryOption());
+                    intent.putExtra("totalprice",selectedOrder.getTotalPrice().toString());
+                    //intent.putExtra("orderDate", selectedOrder.getOrderDate());
+                    //intent.putExtra("custName", selectedOrder.getCustName());
+                    //intent.putExtra("custPhone", selectedOrder.getCustPhone());
+                    //intent.putExtra("custEmail", selectedOrder.getCustEmail());
+                    //intent.putExtra("productImage",String.valueOf(selectedProduct.getUrl()));
 
                     itemView.getContext().startActivity(intent);
-
-                     */
                 }
             });
         }
