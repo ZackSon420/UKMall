@@ -174,15 +174,6 @@
                     app:strokeColor="#000000"
                     tools:ignore="TouchTargetSizeCheck" />
 
-                <Button
-                    android:id="@+id/btn_buy_now"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:minHeight="48dp"
-                    android:text="BUY NOW"
-                    tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
             <Button
@@ -195,6 +186,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
                 tools:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_ProductID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ProductID"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
+            <Button
+                android:id="@+id/btn_buy_now"
+                android:layout_width="136dp"
+                android:layout_height="39dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:text="BUY NOW"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ProductID"
+                tools:ignore="TouchTargetSizeCheck" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,14 +52,13 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     //private static final String KEY_STORE_NAME = "name";
 
     //declare variable
-    TextView tvStoreName, tvProductName, tvProductPrice, tvProductDesc, tvQuantity;
+    TextView tvProductID, tvStoreName, tvProductName, tvProductPrice, tvProductDesc, tvQuantity;
     Button btnAdd, btnMinus, btnAddToCart, btnBuyNow, btnViewProduct;
     private ImageSlider imageSlider;
     String img, img2;
     Integer quantity = 1;
     private List<Item> itemCartList;
     private CartViewModel viewModel;
-
     FirebaseFirestore db;
     FirebaseAuth mAuth;
 
@@ -80,13 +79,14 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         db = FirebaseFirestore.getInstance();
 
         ArrayList<SlideModel> slideModels = new ArrayList<>();
-
+        tvProductID = findViewById(R.id.tv_ProductID);
         tvStoreName = findViewById(R.id.tv_store_name);
         tvProductName = findViewById(R.id.tv_productName);
         tvProductPrice = findViewById(R.id.tv_productPrice);
         tvProductDesc = findViewById(R.id.tv_productDesc);
         tvQuantity = findViewById(R.id.tv_quantity);
         imageSlider = findViewById(R.id.image_slider);
+
 
         btnAdd = findViewById(R.id.btn_add);
         btnMinus = findViewById(R.id.btn_minus);
@@ -104,6 +104,8 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
         //get data from RecyclerView
         Intent intent = getIntent();
+
+        tvProductID.setText(intent.getStringExtra("productId"));
         tvProductName.setText(intent.getStringExtra("productName"));
         tvProductDesc.setText(intent.getStringExtra("productDesc"));
         tvProductPrice.setText(intent.getStringExtra("productPrice"));
@@ -174,6 +176,8 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
         Item item = new Item();
         Intent intent = getIntent();
+
+
         item.setItemName(intent.getStringExtra("productName"));
 
        // item.setShoeBrandName(shoe.getShoeBrandName());
@@ -221,20 +225,22 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         final HashMap<String, Object> cartMap = new HashMap<>();
 
 
+        cartMap.put("productId", tvProductID.getText().toString());
+        cartMap.put("productName",tvProductName.getText().toString());
+        cartMap.put("productPrice",tvProductPrice.getText().toString());
         cartMap.put("currentDate",saveCurrentDate);
         cartMap.put("currentTime",saveCurrentTime);
 
 
 
-        cartMap.put("productName",tvProductName.getText().toString());
-        cartMap.put("productPrice",tvProductPrice.getText().toString());
+
         /*cartMap.put("currentDate",saveCurrentDate);
         cartMap.put("currentTime",saveCurrentTime);
         cartMap.put("totalQuantity",tvQuantity.getText().toString());
         cartMap.put("totalPrice",tvProductPrice);*/
 
 
-        db.collection("AddToCart").document(mAuth.getCurrentUser().getUid()).collection("CurrentUser").add(cartMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        db.collection("AddToCart").document("CUS"+mAuth.getCurrentUser().getUid()).collection("CurrentUser").add(cartMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
             public void onComplete(@NonNull Task<DocumentReference> task) {
 

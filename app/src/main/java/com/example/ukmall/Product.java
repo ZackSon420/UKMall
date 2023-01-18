@@ -1,19 +1,30 @@
 package com.example.ukmall;
 
 public class Product {
-    String productTitle, productDescription, url, url2, productStore;
+    String productId,productTitle, productDescription, url, url2, productStore;
     Double originalPrice;
 
     public Product(){
     }
 
-    public Product(String productTitle, String productDescription, String url, String url2, String productStore,Double originalPrice) {
+
+
+    public Product(String productId, String productTitle, String productDescription, String url, String url2, String productStore, Double originalPrice) {
+        this.productId = productId;
         this.productTitle = productTitle;
         this.productDescription = productDescription;
         this.url = url;
         this.url2 = url2;
         this.productStore = productStore;
         this.originalPrice = originalPrice;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getProductTitle() {

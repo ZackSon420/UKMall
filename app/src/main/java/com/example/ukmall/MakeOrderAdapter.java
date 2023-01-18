@@ -23,7 +23,7 @@ public class MakeOrderAdapter extends RecyclerView.Adapter<MakeOrderAdapter.Make
 
     }
 
-    public MakeOrderAdapter(Receipt makeOrder) {
+    public MakeOrderAdapter(Receipt receipt) {
 
     }
 
@@ -77,6 +77,7 @@ public class MakeOrderAdapter extends RecyclerView.Adapter<MakeOrderAdapter.Make
             tv_prodname=itemView.findViewById(R.id.tv_nameproduct);
             tv_prodprice=itemView.findViewById(R.id.tv_priceproduct);
             tv_QuantityProduct=itemView.findViewById(R.id.tv_quantityproduct);
+
         }
 
     }

@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "Items")
 public class Item {
     @PrimaryKey(autoGenerate = true)
+
     private int itemID;
     private String itemName;
     private String itemImage;

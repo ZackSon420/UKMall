@@ -51,22 +51,22 @@ public class Receipt extends AppCompatActivity {
     RecyclerView.LayoutManager cartLayoutManager;
     MakeOrderAdapter cartAdapter;
     Context context;
-    View view;
-    Bitmap bitmap, scaledbmp;
+//    View view;
+//    Bitmap bitmap, scaledbmp;
 
 
-//    private RecyclerView receiptview;
+    //    private RecyclerView receiptview;
 //    RecyclerView.LayoutManager receiptLayoutManager;
 //    ReceiptAdapter receiptAdapter;
 //    CartViewModel cartViewModel;
 //    public List<Item> selectedProductList;
-    TextView priceBought, TVBigPrice, TVtransacid;
-    Button btnGenerate;
-    int pageHeight = 1120;
-    int pageWidht = 792;
+    TextView priceBought, TVBigPrice, TVtransacid, TVsubtotal;
+    Button btnMenu;
+//    int pageHeight = 1120;
+//    int pageWidht = 792;
 
-    private static final int PERMISSION_REQUEST_CODE = 200;
-//
+//    private static final int PERMISSION_REQUEST_CODE = 200;
+    //
 //    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,13 +75,14 @@ public class Receipt extends AppCompatActivity {
         priceBought = findViewById(R.id.tv_pricebought);
         TVBigPrice = findViewById(R.id.tv_bigprice);
         TVtransacid = findViewById(R.id.tv_transactionid);
-        btnGenerate = findViewById(R.id.btn_generatepdf);
-
-        view = getWindow().getDecorView().getRootView();
-        view.setDrawingCacheEnabled(true);
-        bitmap = Bitmap.createBitmap(view.getDrawingCache());
-        view.setDrawingCacheEnabled(false);
-        scaledbmp = Bitmap.createScaledBitmap(bitmap, 140,140, false);
+        TVsubtotal=findViewById(R.id.tv_purchase);
+        btnMenu = findViewById(R.id.btn_mainmenu);
+//
+//        view = getWindow().getDecorView().getRootView();
+//        view.setDrawingCacheEnabled(true);
+//        bitmap = Bitmap.createBitmap(view.getDrawingCache());
+//        view.setDrawingCacheEnabled(false);
+//        scaledbmp = Bitmap.createScaledBitmap(bitmap, 140,140, false);
 
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
@@ -103,79 +104,83 @@ public class Receipt extends AppCompatActivity {
 
         Intent intent = getIntent();
         TVBigPrice.setText(String.valueOf(intent.getDoubleExtra("totalPrice", 0)));
+        TVsubtotal.setText(String.valueOf(intent.getDoubleExtra("subtotal", 0.0)));
         priceBought.setText(String.valueOf(intent.getDoubleExtra("totalPrice", 0)));
         TVtransacid.setText(intent.getStringExtra("orderID"));
 
-        if(!checkPermission()){
-            requestPermission();
-        }
+//        if(!checkPermission()){
+//            requestPermission();
+//        }
 
-        btnGenerate.setOnClickListener(new View.OnClickListener() {
+        btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                generatePDF();
+                cartViewModel.deleteAllCartItems();
+
+                Intent intent = new Intent(Receipt.this, Homepage.class);
+                startActivity(intent);
             }
         });
 
     }
 
-    private void generatePDF() {
-        PdfDocument pdfDocument = new PdfDocument();
-        String fileName = Environment.getExternalStorageDirectory()+"/receipt.pdf";
+//    private void generatePDF() {
+//        PdfDocument pdfDocument = new PdfDocument();
+//        String fileName = Environment.getExternalStorageDirectory()+"/receipt.pdf";
+//
+//        Paint paint = new Paint();
+//        Paint title = new Paint();
+//
+//        PdfDocument.PageInfo receiptpageInfo = new PdfDocument.PageInfo.Builder(pageWidht,pageHeight,1).create();
+//        PdfDocument.Page receiptPage = pdfDocument.startPage(receiptpageInfo);
+//
+//
+//
+//        Canvas canvas = receiptPage.getCanvas();
+//
+//        canvas.drawBitmap(scaledbmp,56,40,paint);
+//        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+//        title.setTextSize(15);
+//        title.setColor(ContextCompat.getColor(this, R.color.purple_700));
+//        canvas.drawText("Test 1",209,100,title);
+//        canvas.drawText("Test 2",209,80,title);
+//
+//        title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+//        title.setColor(ContextCompat.getColor(this, R.color.purple_200));
+//        title.setTextSize(15);
+//        title.setTextAlign(Paint.Align.CENTER);
+//        canvas.drawText("This is sample document which we have created.", 396, 560, title);
+//
+//        pdfDocument.finishPage(receiptPage);
+//
+//        File file = new File(Environment.getExternalStorageDirectory(), "ReceiptTest.pdf");
+//
+//        try {
+//            // after creating a file name we will
+//            // write our PDF file to that location.
+//            pdfDocument.writeTo(new FileOutputStream(file));
+//
+//            // below line is to print toast message
+//            // on completion of PDF generation.
+//            Toast.makeText(Receipt.this, "PDF file generated successfully.", Toast.LENGTH_SHORT).show();
+//        } catch (IOException e) {
+//            // below line is used
+//            // to handle error
+//            e.printStackTrace();
+//        }
+//        // after storing our pdf to that
+//        // location we are closing our PDF file.
+//        pdfDocument.close();
+//    }
 
-        Paint paint = new Paint();
-        Paint title = new Paint();
-
-        PdfDocument.PageInfo receiptpageInfo = new PdfDocument.PageInfo.Builder(pageWidht,pageHeight,1).create();
-        PdfDocument.Page receiptPage = pdfDocument.startPage(receiptpageInfo);
-
-
-
-        Canvas canvas = receiptPage.getCanvas();
-
-        canvas.drawBitmap(scaledbmp,56,40,paint);
-        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-        title.setTextSize(15);
-        title.setColor(ContextCompat.getColor(this, R.color.purple_700));
-        canvas.drawText("Test 1",209,100,title);
-        canvas.drawText("Test 2",209,80,title);
-
-        title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-        title.setColor(ContextCompat.getColor(this, R.color.purple_200));
-        title.setTextSize(15);
-        title.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("This is sample document which we have created.", 396, 560, title);
-
-        pdfDocument.finishPage(receiptPage);
-
-        File file = new File(Environment.getExternalStorageDirectory(), "ReceiptTest.pdf");
-
-        try {
-            // after creating a file name we will
-            // write our PDF file to that location.
-            pdfDocument.writeTo(new FileOutputStream(file));
-
-            // below line is to print toast message
-            // on completion of PDF generation.
-            Toast.makeText(Receipt.this, "PDF file generated successfully.", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            // below line is used
-            // to handle error
-            e.printStackTrace();
-        }
-        // after storing our pdf to that
-        // location we are closing our PDF file.
-        pdfDocument.close();
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-    }
-
-    private boolean checkPermission() {
-        int permission1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-        int permission2 = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
-        return permission1 == PackageManager.PERMISSION_GRANTED && permission2 == PackageManager.PERMISSION_GRANTED;
-    }
+//    private void requestPermission() {
+//        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+//    }
+//
+//    private boolean checkPermission() {
+//        int permission1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+//        int permission2 = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
+//        return permission1 == PackageManager.PERMISSION_GRANTED && permission2 == PackageManager.PERMISSION_GRANTED;
+//    }
 
 }

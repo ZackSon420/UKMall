@@ -51,7 +51,6 @@ import java.util.jar.JarException;
 
 public class MakeOrder extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners, Serializable{
 
-    private TextView tvTotalPrice;
     private Button btnMakeOrder;
     private Spinner paymentMethod, deliveryOption;
     String SECRET_KEY="sk_test_51MQtpKFv1N0LbQC79BxmjHmq4Yk8h5xfDdOiaA0p4l3M8X2Xg1jdH5e1rQSTIVO26eFq8gV9SSyLXTVtciDwbd1D00Wo7aD7ie";
@@ -65,7 +64,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     RecyclerView.LayoutManager cartlayoutManager;
     MakeOrderAdapter cartAdapter;
     private CartViewModel cartViewModel;
-    private TextView totalCartPriceTV;
+    private TextView totalCartPriceTV, TVfee, TVsubprice;
     public List<Item> selectedProductList;
     private ArrayList<Object> arrayOrder = new ArrayList<>();
 
@@ -75,6 +74,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         setContentView(R.layout.activity_makeorder);
 
         totalCartPriceTV=findViewById(R.id.tv_totalprice);
+        TVfee = findViewById(R.id.tv_fee);
+        TVsubprice=findViewById(R.id.tv_subtotal);
         btnMakeOrder=findViewById(R.id.btn_make_order);
         btnMakeOrder.setOnClickListener(this);
         //CartViewModel
@@ -89,7 +90,6 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         cartView.setAdapter(cartAdapter);
         cartView.setHasFixedSize(true);
 
-        tvTotalPrice = findViewById(R.id.tv_totalprice);
         btnMakeOrder = findViewById(R.id.btn_make_order);
         paymentMethod = findViewById(R.id.spinner_paymentMethod);
         deliveryOption = findViewById(R.id.spinner_deliveryOption);
@@ -152,6 +152,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onChanged(List<Item> productCarts) {
                 double price = 0;
+                double fee = 1.0;
 
                 cartAdapter.setItemCartList(productCarts);
                 for (int i=0;i<productCarts.size();i++){
@@ -171,7 +172,9 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                     arrayOrder.add(prodhashMap);
                 }
                 //selectedProductList.addAll(productCarts);
-                totalCartPriceTV.setText(String.valueOf(price));
+                TVsubprice.setText(String.valueOf(price));
+                TVfee.setText(String.valueOf(fee));
+                totalCartPriceTV.setText(String.valueOf(price+fee));
 
             }
 
@@ -179,7 +182,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     }
 
     private String paymentMethodStr,deliveryOptionStr, orderid;
-    public Double totalPrice;
+    private Double totalPrice, subtotal;
     private boolean orderStatus;
     private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
         if(paymentSheetResult instanceof PaymentSheetResult.Completed){
@@ -245,7 +248,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     }
 
     private void getClientSecret(String customerID, String ephericalKey) {
-        totalPrice = Double.valueOf(tvTotalPrice.getText().toString());
+        totalPrice = Double.valueOf(totalCartPriceTV.getText().toString());
+        subtotal = Double.valueOf(TVsubprice.getText().toString());
 
         StringRequest stringRequest=new StringRequest(Request.Method.POST,
                 "https://api.stripe.com/v1/payment_intents",
@@ -318,7 +322,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     private void makeOrder() {
 
         String timestamp = "" + System.currentTimeMillis();
-        totalPrice = Double.valueOf(tvTotalPrice.getText().toString());
+        totalPrice = Double.valueOf(totalCartPriceTV.getText().toString());
         orderStatus = false; // false = seller prepare the order, true = order has complete
         paymentMethodStr = paymentMethod.getSelectedItem().toString();
         deliveryOptionStr = deliveryOption.getSelectedItem().toString();
@@ -356,13 +360,6 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         hashMap2.put("customerID", customerID);
         hashMap2.put("paymentStatus", "Successful");
 
-        db.collection("OrderDetail").document(orderid).set(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-
-            }
-        });
-
 
         for(int i = 0; i<arrayOrder.size();i++){
 
@@ -370,19 +367,23 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
 //                    Toast.makeText(MakeOrder.this, "Sub document successful", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
 
                 }
             });
 
-            Intent intent = new Intent(MakeOrder.this, Receipt.class);
-            intent.putExtra("totalPrice", totalPrice);
-            intent.putExtra("orderID", orderid);
-            startActivity(intent);
-
         }
 
-
+        db.collection("OrderDetail").document(orderid).set(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MakeOrder.this, Receipt.class);
+                intent.putExtra("subtotal", subtotal);
+                intent.putExtra("totalPrice", totalPrice);
+                intent.putExtra("orderID", orderid);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
