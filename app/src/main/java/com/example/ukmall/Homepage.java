@@ -54,11 +54,6 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     EditText searchBox;
     TextView tv_userName;
 
-    //Array utk RecyclerView
-    //Nanti tukar kepada data dalam firebase
-    int []arr={R.drawable.brownies,R.drawable.brownies,R.drawable.brownies,R.drawable.brownies,R.drawable.brownies,
-            R.drawable.brownies,R.drawable.brownies,R.drawable.brownies};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

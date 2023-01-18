@@ -23,6 +23,10 @@ public class MakeOrderAdapter extends RecyclerView.Adapter<MakeOrderAdapter.Make
 
     }
 
+    public MakeOrderAdapter(Receipt receipt) {
+
+    }
+
     public void setItemCartList(List<Item> itemCartList) {
         this.itemCartList = itemCartList;
         notifyDataSetChanged();
