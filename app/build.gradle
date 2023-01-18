@@ -58,6 +58,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation 'com.google.firebase:firebase-storage'
     implementation 'com.github.denzcoskun:ImageSlideshow:0.1.0'
+//    implementation 'com.itextpdf:itextg:5.5.13'
+
 
 
     def room_version = "2.4.3"
