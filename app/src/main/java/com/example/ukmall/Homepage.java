@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,7 +51,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     private SessionManager sessionManager;
     //button search
     ImageView  iv_searchproduct,iv_User;
-
+    EditText searchBox;
     TextView tv_userName;
 
     //Array utk RecyclerView
@@ -69,10 +70,9 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
         iv_User=findViewById(R.id.iv_user);
         iv_User.setOnClickListener(this);
 
-        tv_userName = findViewById(R.id.tv_userName);
-        show_username();
 
 
+        searchBox = findViewById(R.id.et_searchbox);
         //button search
         iv_searchproduct=findViewById(R.id.iv_searchprod);
         iv_searchproduct.setOnClickListener(this);
@@ -105,6 +105,30 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
 
         //Declare Session
         sessionManager = new SessionManager(this);
+        tv_userName = findViewById(R.id.tv_userName);
+        show_username();
+
+
+
+        iv_searchproduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Retrieve the text from the searchBox
+                String searchText = searchBox.getText().toString().trim();
+                if (!searchText.isEmpty()) {
+                    //Perform the search query on your Firebase Firestore database
+                    performSearch(searchText);
+                }
+                else{
+                    EventChangeListener();
+                }
+            }
+
+
+
+        });
+
 
 
         // Perform item selected listener untuk button BottomNavigationView
@@ -143,7 +167,8 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     }
 
 
-    private void EventChangeListener(){
+    /*private void EventChangeListener(){
+
 
         db.collectionGroup("product").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -160,16 +185,64 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
             }
         });
 
-    }
+    } */
 
 
     public void show_username(){
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
 
-        String username = intent.getStringExtra("name");
+        String username = intent.getStringExtra("name");*/
+
+        sessionManager =new SessionManager(this);
+        String username = sessionManager.getUsername();
 
         tv_userName.setText(username);
     }
+
+    private void performSearch(String searchText) {
+
+        //Query the Firebase Firestore database for documents that contain the searchText in their "name" field
+        Query query = db.collection("product").whereEqualTo("productTitle", searchText);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    //Clear the productArrayList
+                    productArrayList.clear();
+                    //Iterate through the query results
+                    for (DocumentSnapshot document : task.getResult()) {
+                        //Add the product to the productArrayList
+                        productArrayList.add(document.toObject(Product.class));
+                    }
+                    //Notify the RecyclerViewAdapter that the data has changed
+                    recyclerViewAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
+    private void EventChangeListener() {
+        productArrayList.clear();
+        db.collection("product").orderBy("productTitle", Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("Error", e.getMessage());
+                }
+                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case ADDED:
+                            productArrayList.add(dc.getDocument().toObject(Product.class));
+                            recyclerViewAdapter.notifyDataSetChanged();
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+
+
 
     //Untuk function search
     @Override

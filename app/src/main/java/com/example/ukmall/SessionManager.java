@@ -26,6 +26,7 @@ public class SessionManager {
     }
 
     public void createSession(String name, String email) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();;
         editor.putBoolean(LOGIN, true);
         editor.putString(NAME, name);
         editor.putString(EMAIL, email);
@@ -53,4 +54,13 @@ public class SessionManager {
         ((AppCompatActivity) context).finish();
     }
 
+    public String getTrimmedEmail() {
+        String email = sharedPreferences.getString(NAME, "");
+        return email.substring(0, email.indexOf("@"));
+    }
+
+    public String getUsername() {
+
+        return getTrimmedEmail();
+    }
 }
