@@ -179,7 +179,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     }
 
     private String paymentMethodStr,deliveryOptionStr, orderid;
-    public Double totalPrice;
+    private Double totalPrice;
     private boolean orderStatus;
     private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
         if(paymentSheetResult instanceof PaymentSheetResult.Completed){
@@ -372,13 +372,12 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 //                    Toast.makeText(MakeOrder.this, "Sub document successful", Toast.LENGTH_SHORT).show();
                     Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
 
+                    cartViewModel.deleteAllCartItems();
+
+                    Intent intent = new Intent(MakeOrder.this, Homepage.class);
+                    startActivity(intent);
                 }
             });
-
-            Intent intent = new Intent(MakeOrder.this, Receipt.class);
-            intent.putExtra("totalPrice", totalPrice);
-            intent.putExtra("orderID", orderid);
-            startActivity(intent);
 
         }
 
