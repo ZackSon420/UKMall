@@ -206,6 +206,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
             viewModel.updatePrice(id[0] , quantity[0]*item.getItemPrice());
         }
 
+        //Restrict User From Accessing Same Cart------------------------------------------------------------------
         String saveCurrentDate, saveCurrentTime;
         Calendar calForDate = Calendar.getInstance();
 
@@ -215,6 +216,8 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
+
+        //Push User Data on Cart to Firebased Named "AddToCart"
         final HashMap<String, Object> cartMap = new HashMap<>();
 
 
@@ -223,9 +226,9 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
 
 
-        /*cartMap.put("productName",tvProductName.getText().toString());
+        cartMap.put("productName",tvProductName.getText().toString());
         cartMap.put("productPrice",tvProductPrice.getText().toString());
-        cartMap.put("currentDate",saveCurrentDate);
+        /*cartMap.put("currentDate",saveCurrentDate);
         cartMap.put("currentTime",saveCurrentTime);
         cartMap.put("totalQuantity",tvQuantity.getText().toString());
         cartMap.put("totalPrice",tvProductPrice);*/
@@ -244,7 +247,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
         startActivity(new Intent(ProductDetails.this , Cart.class));
 
-
+//----------------------------------------------------------------------------------------------------------------------------------------
     }
 
     @Override
