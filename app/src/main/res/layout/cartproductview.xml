@@ -69,16 +69,17 @@
             android:id="@+id/bt_minus_quantity"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="52dp"
             android:background="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="@+id/bt_add_quantity"
             app:layout_constraintEnd_toStartOf="@+id/bt_add_quantity"
             app:layout_constraintTop_toTopOf="@+id/bt_add_quantity"
+            app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/minus_quantity_button" />
 
         <TextView
             android:id="@+id/tv_quantityproduct"
-            android:layout_width="16dp"
+            android:layout_width="50dp"
             android:layout_height="16dp"
             android:background="#FFFFFF"
             android:fontFamily="@font/krona_one"
