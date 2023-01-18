@@ -60,7 +60,7 @@ public class Receipt extends AppCompatActivity {
 //    ReceiptAdapter receiptAdapter;
 //    CartViewModel cartViewModel;
 //    public List<Item> selectedProductList;
-    TextView priceBought, TVBigPrice, TVtransacid;
+    TextView priceBought, TVBigPrice, TVtransacid, TVsubtotal;
     Button btnMenu;
 //    int pageHeight = 1120;
 //    int pageWidht = 792;
@@ -75,6 +75,7 @@ public class Receipt extends AppCompatActivity {
         priceBought = findViewById(R.id.tv_pricebought);
         TVBigPrice = findViewById(R.id.tv_bigprice);
         TVtransacid = findViewById(R.id.tv_transactionid);
+        TVsubtotal=findViewById(R.id.tv_purchase);
         btnMenu = findViewById(R.id.btn_mainmenu);
 //
 //        view = getWindow().getDecorView().getRootView();
@@ -103,6 +104,7 @@ public class Receipt extends AppCompatActivity {
 
         Intent intent = getIntent();
         TVBigPrice.setText(String.valueOf(intent.getDoubleExtra("totalPrice", 0)));
+        TVsubtotal.setText(String.valueOf(intent.getDoubleExtra("subtotal", 0.0)));
         priceBought.setText(String.valueOf(intent.getDoubleExtra("totalPrice", 0)));
         TVtransacid.setText(intent.getStringExtra("orderID"));
 
