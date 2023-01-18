@@ -356,13 +356,6 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         hashMap2.put("customerID", customerID);
         hashMap2.put("paymentStatus", "Successful");
 
-        db.collection("OrderDetail").document(orderid).set(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-
-            }
-        });
-
 
         for(int i = 0; i<arrayOrder.size();i++){
 
@@ -370,18 +363,22 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
 //                    Toast.makeText(MakeOrder.this, "Sub document successful", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
 
-                    cartViewModel.deleteAllCartItems();
-
-                    Intent intent = new Intent(MakeOrder.this, Homepage.class);
-                    startActivity(intent);
                 }
             });
 
         }
 
-
+        db.collection("OrderDetail").document(orderid).set(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MakeOrder.this, Receipt.class);
+                intent.putExtra("totalPrice", totalPrice);
+                intent.putExtra("orderID", orderid);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
