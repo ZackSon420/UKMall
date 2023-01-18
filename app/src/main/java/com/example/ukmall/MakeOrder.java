@@ -1,6 +1,7 @@
 package com.example.ukmall;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,6 +15,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.ukmall.repository.CartRepo;
 import com.example.ukmall.utils.model.Item;
 import com.example.ukmall.viewmodel.CartViewModel;
@@ -26,18 +34,32 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.paymentsheet.PaymentSheet;
+import com.stripe.android.paymentsheet.PaymentSheetResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.jar.JarException;
 
 public class MakeOrder extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners, Serializable{
 
     private TextView tvTotalPrice;
     private Button btnMakeOrder;
     private Spinner paymentMethod, deliveryOption;
+    String SECRET_KEY="sk_test_51MQtpKFv1N0LbQC79BxmjHmq4Yk8h5xfDdOiaA0p4l3M8X2Xg1jdH5e1rQSTIVO26eFq8gV9SSyLXTVtciDwbd1D00Wo7aD7ie";
+    String PUBLISH_KEY="pk_test_51MQtpKFv1N0LbQC775cTkuCoLSk3Gx6SfcG3H7Q3QMI7GUu0U985YUZiMmDBumwPyUOGPhmYWgzLOwDF7MC2ephV00QNipvPbE";
+    PaymentSheet paymentSheet;
+    String customerID;
+    String EphericalKey;
+    String ClientSecret;
 
     private RecyclerView cartView;
     RecyclerView.LayoutManager cartlayoutManager;
@@ -72,10 +94,57 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         paymentMethod = findViewById(R.id.spinner_paymentMethod);
         deliveryOption = findViewById(R.id.spinner_deliveryOption);
 
+        PaymentConfiguration.init(this,PUBLISH_KEY);
+        paymentSheet=new PaymentSheet(this,paymentSheetResult -> {
+
+            onPaymentResult(paymentSheetResult);
+
+        });
+
+        //StringRequest
+        StringRequest stringRequest=new StringRequest(Request.Method.POST,
+                "https://api.stripe.com/v1/customers",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try{
+                            JSONObject object=new JSONObject(response);
+                            customerID=object.getString("id");
+                            getEphericalKey(customerID);
+
+                        }catch (JSONException e){
+
+                        }
+
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header= new HashMap<>();
+                header.put("Authorization","Bearer "+SECRET_KEY);
+                return header;
+            }
+        };
+
+        RequestQueue requestQueue= Volley.newRequestQueue(MakeOrder.this);
+        requestQueue.add(stringRequest);
+
+
+
         btnMakeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeOrder();
+
+                PaymentFlow();
+                //makeOrder();
             }
         });
 
@@ -109,10 +178,143 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         });
     }
 
-
     private String paymentMethodStr,deliveryOptionStr, orderid;
     private Double totalPrice;
     private boolean orderStatus;
+    private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
+        if(paymentSheetResult instanceof PaymentSheetResult.Completed){
+            Toast.makeText(this,"payment success",Toast.LENGTH_SHORT).show();
+            makeOrder();
+        }
+        if(paymentSheetResult instanceof PaymentSheetResult.Failed){
+            Toast.makeText(this,"payment failed",Toast.LENGTH_SHORT).show();
+           // makeOrder();
+        }
+        if(paymentSheetResult instanceof PaymentSheetResult.Canceled){
+            Toast.makeText(this,"payment canceled",Toast.LENGTH_SHORT).show();
+           // makeOrder();
+        }
+    }
+
+    private void getEphericalKey(String customerID) {
+
+        StringRequest stringRequest=new StringRequest(Request.Method.POST,
+                "https://api.stripe.com/v1/ephemeral_keys",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try{
+                            JSONObject object=new JSONObject(response);
+                            EphericalKey=object.getString("id");
+                            getClientSecret(customerID,EphericalKey);
+
+                        }catch (JSONException e){
+
+                        }
+
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header= new HashMap<>();
+                header.put("Authorization","Bearer "+SECRET_KEY);
+                header.put("Stripe-Version","2022-11-15 ");
+                return header;
+            }
+
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params=new HashMap<>();
+                params.put("customer",customerID);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue= Volley.newRequestQueue(MakeOrder.this);
+        requestQueue.add(stringRequest);
+
+    }
+
+    private void getClientSecret(String customerID, String ephericalKey) {
+        totalPrice = Double.valueOf(tvTotalPrice.getText().toString());
+
+        StringRequest stringRequest=new StringRequest(Request.Method.POST,
+                "https://api.stripe.com/v1/payment_intents",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try{
+                            JSONObject object=new JSONObject(response);
+                            ClientSecret=object.getString("client_secret");
+                           // getClientSecret(customerID,EphericalKey);
+
+
+                        }catch (JSONException e){
+
+                        }
+
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header= new HashMap<>();
+                header.put("Authorization","Bearer "+SECRET_KEY);
+                return header;
+            }
+
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+               // Toast.makeText(MakeOrder.this, "Price:"+totalPrice, Toast.LENGTH_SHORT).show();
+                //double num=60;
+                String totalPrice = totalCartPriceTV.getText().toString();
+                Long totalPriceCents = (long) (Double.parseDouble(totalPrice) * 100);
+                Map<String, String> params=new HashMap<>();
+                params.put("customer",customerID);
+                params.put("amount", String.valueOf(totalPriceCents));
+                params.put("currency","myr");
+                params.put("automatic_payment_methods[enabled]","true");
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue= Volley.newRequestQueue(MakeOrder.this);
+        requestQueue.add(stringRequest);
+
+    }
+
+    private void PaymentFlow() {
+
+        paymentSheet.presentWithPaymentIntent(
+                ClientSecret,new PaymentSheet.Configuration("testing"
+                        ,new PaymentSheet.CustomerConfiguration(
+                                customerID,
+                                EphericalKey
+                ))
+        );
+
+    }
+
+
+
     private void makeOrder() {
 
         String timestamp = "" + System.currentTimeMillis();
@@ -138,6 +340,23 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         hashMap.put("deliveryOption", deliveryOptionStr);
 
         db.collection("order").document(orderid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        });
+
+
+        //FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //CollectionReference orderDetailRef = db.collection("orderDetail");
+       // Query docRef = orderDetailRef.whereEqualTo("orderId", orderid);
+
+        HashMap<String, Object> hashMap2 = new HashMap<>();
+        hashMap2.put("orderId", orderid);
+        hashMap2.put("customerID", customerID);
+        hashMap2.put("paymentStatus", "Successful");
+
+        db.collection("OrderDetail").document(orderid).set(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
 
