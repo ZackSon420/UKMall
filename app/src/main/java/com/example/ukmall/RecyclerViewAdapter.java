@@ -91,6 +91,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     //pass data to Product Details activity
                     Intent intent = new Intent(itemView.getContext(),ProductDetails.class);
                     Product selectedProduct = productArrayList.get(index);
+                    intent.putExtra("productId", selectedProduct.getProductId());
                     intent.putExtra("productName",selectedProduct.getProductTitle());
                     intent.putExtra("productDesc",selectedProduct.getProductDescription());
                     intent.putExtra("productImage",String.valueOf(selectedProduct.getUrl()));
