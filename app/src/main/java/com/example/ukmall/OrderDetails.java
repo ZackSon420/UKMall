@@ -1,5 +1,7 @@
 package com.example.ukmall;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -7,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,7 +21,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -34,8 +36,7 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
     TextView tvOrderId, tvOrderDate, tvCustName, tvPhoneNumber, tvEmail, tvPayment, tvDelivery, tvTotalPrice;
     Button btnAccept, btnCancel;
     ImageView ivCust;
-    //String documentId;
-
+    String docId;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference orderRef = db.collection("order");
 
@@ -56,25 +57,12 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
 
         btnAccept = findViewById(R.id.btn_accept);
         btnCancel = findViewById(R.id.btn_cancel);
-
         btnAccept.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
 
-        //recyclerView order details
-        rvOrderDetails = findViewById(R.id.rv_orderDetails);
-        layoutManager=new GridLayoutManager(this, 1);
-        rvOrderDetails.setLayoutManager(layoutManager);
-
-        //db = FirebaseFirestore.getInstance();
-        itemArrayList = new ArrayList<Item>();
-        orderDetailsAdapter = new OrderDetailsAdapter(OrderDetails.this, itemArrayList);
-
-        rvOrderDetails.setAdapter(orderDetailsAdapter);
-        EventChangeListener();
-        rvOrderDetails.setHasFixedSize(true);
-
+        //intent
         Intent intent = getIntent();
-        //documentId.set(intent.getStringExtra("orderId")) ;
+        docId = (intent.getStringExtra("orderId"));
         tvOrderId.setText(intent.getStringExtra("orderId"));
         tvPayment.setText(intent.getStringExtra("payment"));
         tvDelivery.setText(intent.getStringExtra("delivery"));
@@ -83,17 +71,27 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
         tvProductPrice.setText(intent.getStringExtra("productPrice"));
         tvStoreName.setText(intent.getStringExtra("store"));
         img = intent.getStringExtra("productImage");
-        img2 = intent.getStringExtra("productImage2");
+        img2 = intent.getStringExtra("productImage2");*/
 
-         */
+        //recyclerView order details
+        rvOrderDetails = findViewById(R.id.rv_orderDetails);
+        layoutManager=new GridLayoutManager(this, 1);
+        rvOrderDetails.setLayoutManager(layoutManager);
+
+        itemArrayList = new ArrayList<Item>();
+        orderDetailsAdapter = new OrderDetailsAdapter(OrderDetails.this, itemArrayList);
+
+        rvOrderDetails.setAdapter(orderDetailsAdapter);
+        EventChangeListener();
+        rvOrderDetails.setHasFixedSize(true);
 
     }
 
     private void EventChangeListener() {
 
-        //DISPLAY ALL ITEM DALAM COLLECTION ordered
-        CollectionReference orderRef = db.collection("order");
-        db.collectionGroup("ordered").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        //Display selected product dalam specific order
+        CollectionReference orderRef = db.collection("order").document(docId).collection("ordered");
+        orderRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -107,19 +105,6 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-
-        /*orderRef.document("ORD1673922703602")
-                .collection("ordered").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        String data = "";
-
-                        for (QueryDocumentSnapshot documentSnapshots : queryDocumentSnapshots){
-                            itemArrayList.add(documentSnapshots.toObject(Item.class));
-                        }
-                    }
-                });*/
     }
 
     @Override
