@@ -63,8 +63,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvProductName=itemView.findViewById(R.id.tv_nameproduct);
-            tvProductQuantity=itemView.findViewById(R.id.tv_quantityorder);
-            tvProductSale=itemView.findViewById(R.id.tv_totalp_productOrder);
+            tvProductQuantity=itemView.findViewById(R.id.tv_total_unit_sold);
+            tvProductSale=itemView.findViewById(R.id.tv_total_sale_product);
             tvIndex=itemView.findViewById(R.id.tv_index);
         }
     }

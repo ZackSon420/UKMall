@@ -27,14 +27,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/brownies" />
+            app:srcCompat="@drawable/profilepic" />
 
         <TextView
             android:id="@+id/tv_cust_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:text="Jamal Abidin"
+            android:text="Daiyan Trisha"
             android:textColor="#5A5959"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/img_cust"
@@ -74,8 +74,10 @@
             android:text="12 January 2023"
             android:textColor="#000000"
             android:textSize="10sp"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/tv_cust_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_cust_name" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_cust_name"
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/textView24"
@@ -106,10 +108,12 @@
             android:layout_marginTop="16dp"
             android:text="Processing"
             android:textSize="12sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/tv_order_id"
             app:layout_constraintHorizontal_bias="0.388"
             app:layout_constraintStart_toStartOf="@+id/textView24"
-            app:layout_constraintTop_toBottomOf="@+id/tv_order_id" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_order_id"
+            tools:visibility="gone" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
