@@ -215,6 +215,7 @@ public class Add_Product extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void unused) {
                                         // The product was successfully added to the database
+                                        startActivity(new Intent(getApplicationContext(), Homepage.class));
                                         Toast.makeText(Add_Product.this, "Product Added Succesfully", Toast.LENGTH_SHORT).show();
                                         clearData();
                                     }

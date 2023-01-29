@@ -187,6 +187,8 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         item.setItemPrice(Double.parseDouble(str));
         item.setItemImage(intent.getStringExtra("productImage"));
 
+        int num = Integer.parseInt((String) tvQuantity.getText());
+        int num2 = quantity;
         final int[] quantity = {1};
         final int[] id = new int[1];
 
@@ -199,8 +201,9 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                 }
             }
         }
+        quantity[0] = num2;
 
-        if (quantity[0]==1){
+        if (quantity[0]==1||quantity[0]>1){
             item.setQuantity(quantity[0]);
             item.setTotalItemPrice(quantity[0]*item.getItemPrice());
             viewModel.insertCartItem(item);
