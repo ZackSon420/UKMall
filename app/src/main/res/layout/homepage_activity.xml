@@ -131,6 +131,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_welcome" />
 
+            <ImageView
+                android:id="@+id/iv_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_ukmall"
+                app:layout_constraintEnd_toStartOf="@+id/tv_ukmall"
+                app:layout_constraintTop_toTopOf="@+id/tv_ukmall"
+                card_view:srcCompat="@drawable/ic_baseline_logout_24" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

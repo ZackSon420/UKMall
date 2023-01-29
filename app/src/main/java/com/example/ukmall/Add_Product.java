@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -64,12 +65,16 @@ public class Add_Product extends AppCompatActivity {
     private Uri image_uri;
     ActivityResultLauncher<Intent> activityResultLauncher;
     //private FirebaseFirestore db;
-
+    FirebaseFirestore db;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         productIconTV = findViewById(R.id.productIconTV);
         titleEt = findViewById(R.id.titleEt);
@@ -159,9 +164,11 @@ public class Add_Product extends AppCompatActivity {
         String timestamp = "" + System.currentTimeMillis();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String productid = "PROD"+timestamp;
+        String userid = mAuth.getCurrentUser().getUid();
 
         if (image_uri == null) {
             HashMap<String, Object> hashMap = new HashMap();
+            hashMap.put("userId", userid);
             hashMap.put("productId", productid);
             hashMap.put("productTitle", "" + productTitle);
             hashMap.put("productDescription", "" + productDescription);
@@ -171,6 +178,7 @@ public class Add_Product extends AppCompatActivity {
             hashMap.put("originalPrice", originalPrice);
 
 
+            //db.collection("product").document("CUS"+mAuth.getCurrentUser().getUid()).collection("Product").document(productid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             db.collection("product").document(productid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
@@ -203,6 +211,7 @@ public class Add_Product extends AppCompatActivity {
 
                             if(uriTask.isSuccessful()){
                                 HashMap<String, Object> hashMap = new HashMap();
+                                hashMap.put("userId", userid);
                                 hashMap.put("productId", productid);
                                 hashMap.put("productTitle",""+ productTitle);
                                 hashMap.put("productDescription",""+productDescription);
@@ -211,8 +220,9 @@ public class Add_Product extends AppCompatActivity {
                                 hashMap.put("url", ""+downloadImageUrl);
                                 hashMap.put("originalPrice", originalPrice);
 
+                                //db.collection("product").document("CUS"+mAuth.getCurrentUser().getUid()).collection("Product").document(productid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 db.collection("product").document(productid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
+                                @Override
                                     public void onSuccess(Void unused) {
                                         // The product was successfully added to the database
                                         startActivity(new Intent(getApplicationContext(), Homepage.class));
