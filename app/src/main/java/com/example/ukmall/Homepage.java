@@ -50,7 +50,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
 
     private SessionManager sessionManager;
     //button search
-    ImageView  iv_searchproduct,iv_User;
+    ImageView  iv_searchproduct,iv_User,iv_Logout;
     EditText searchBox;
     TextView tv_userName;
 
@@ -65,7 +65,8 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
         iv_User=findViewById(R.id.iv_user);
         iv_User.setOnClickListener(this);
 
-
+        iv_Logout=findViewById(R.id.iv_logout);
+        iv_Logout.setOnClickListener(this);
 
         searchBox = findViewById(R.id.et_searchbox);
         //button search
@@ -218,6 +219,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
 
     private void EventChangeListener() {
         productArrayList.clear();
+
         db.collection("product").orderBy("productTitle", Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -247,16 +249,22 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
         switch (view.getId()){
 
             case R.id.iv_searchprod:
-                Toast.makeText(this, "This is Search Function", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Search", Toast.LENGTH_LONG).show();
                 break;
 
 //Implements session for logout
-            case R.id.iv_user:
+            case R.id.iv_logout:
                 sessionManager.logout();
                 startActivity(new Intent(getApplicationContext(),Login.class));
                 Toast.makeText(Homepage.this, "Logout successfully!", Toast.LENGTH_SHORT).show();
                 viewModel.deleteAllCartItems();
                 break;
+
+            case R.id.iv_user:
+                startActivity(new Intent(getApplicationContext(),UserProductPage.class));
+                Toast.makeText(Homepage.this, "Seller Page", Toast.LENGTH_SHORT).show();
+                break;
+
         }
     }
 
