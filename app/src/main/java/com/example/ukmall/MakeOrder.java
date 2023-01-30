@@ -334,7 +334,6 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     private void addOrder() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference orderRef = db.collection("order");
-        Query docRef = orderRef.whereEqualTo("orderId", orderid);
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("orderId", orderid);
@@ -376,7 +375,12 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         db.collection("OrderDetail").document(orderid).set(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
+
+
+
                 Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
+
+
                 Intent intent = new Intent(MakeOrder.this, Receipt.class);
                 intent.putExtra("subtotal", subtotal);
                 intent.putExtra("totalPrice", totalPrice);

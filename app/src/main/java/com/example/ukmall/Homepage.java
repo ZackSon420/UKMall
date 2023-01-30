@@ -163,27 +163,6 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     }
 
 
-    /*private void EventChangeListener(){
-
-
-        db.collectionGroup("product").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-
-                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
-                        if(dc.getType()==DocumentChange.Type.ADDED){
-                            productArrayList.add(dc.getDocument().toObject(Product.class));
-                        }
-                    }
-                    recyclerViewAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-
-    } */
-
-
     public void show_username(){
         /*Intent intent = getIntent();
 

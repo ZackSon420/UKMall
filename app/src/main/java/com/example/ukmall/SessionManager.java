@@ -60,7 +60,6 @@ public class SessionManager {
     }
 
     public String getUsername() {
-
         return getTrimmedEmail();
     }
 }
