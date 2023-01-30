@@ -148,6 +148,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         HashMap<String, Object> hashMap = new HashMap();
         hashMap.put("userId", userid);
         hashMap.put("totalSpend", 0);
+        hashMap.put("userEmail", emailET.getText().toString().trim());
         hashMap.put("userName", nameET.getText().toString().trim());
 
 
