@@ -21,11 +21,14 @@ import android.widget.Toast;
 
 import com.example.ukmall.viewmodel.CartViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,6 +50,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     FirebaseFirestore db;
     StorageReference storage;
     private CartViewModel viewModel;
+    FirebaseAuth mAuth;
 
     private SessionManager sessionManager;
     //button search
@@ -58,6 +62,7 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_activity);
+        mAuth = FirebaseAuth.getInstance();
 
         viewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
@@ -163,36 +168,28 @@ public class Homepage extends AppCompatActivity implements View.OnClickListener{
     }
 
 
-    /*private void EventChangeListener(){
-
-
-        db.collectionGroup("product").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-
-                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
-                        if(dc.getType()==DocumentChange.Type.ADDED){
-                            productArrayList.add(dc.getDocument().toObject(Product.class));
-                        }
-                    }
-                    recyclerViewAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-
-    } */
-
-
     public void show_username(){
         /*Intent intent = getIntent();
 
         String username = intent.getStringExtra("name");*/
+//
+//        sessionManager =new SessionManager(this);
+//        String username = sessionManager.getUsername();
+//
+//        tv_userName.setText(username);
 
-        sessionManager =new SessionManager(this);
-        String username = sessionManager.getUsername();
+        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
 
-        tv_userName.setText(username);
+                    Object name = documentSnapshot.get("userName");
+                    tv_userName.setText(""+name);
+
+                }
+            }
+        });
     }
 
     private void performSearch(String searchText) {
