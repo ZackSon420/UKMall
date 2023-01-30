@@ -30,6 +30,7 @@ import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -59,6 +60,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     String customerID;
     String EphericalKey;
     String ClientSecret;
+    FirebaseAuth mAuth;
 
     private RecyclerView cartView;
     RecyclerView.LayoutManager cartlayoutManager;
@@ -73,6 +75,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_makeorder);
 
+        mAuth = FirebaseAuth.getInstance();
         totalCartPriceTV=findViewById(R.id.tv_totalprice);
         TVfee = findViewById(R.id.tv_fee);
         TVsubprice=findViewById(R.id.tv_subtotal);
@@ -376,7 +379,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onSuccess(Void unused) {
 
-
+                DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+                userRef.update("totalSpend", totalPrice);
 
                 Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
 

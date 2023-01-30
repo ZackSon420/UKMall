@@ -3,6 +3,7 @@ package com.example.ukmall;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,16 +14,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +42,10 @@ public class Analytics extends AppCompatActivity {
     private RecyclerView productAView;
     RecyclerView.LayoutManager productALayoutManager;
     AnalyticsAdapter analyticsAdapter;
-    private TextView TotalProductTv, TotalSalesTV, TotalOrderTV;
+    private TextView TotalProductTv, TotalSalesTV, TotalOrderTV, TotalSpendTV;
     ArrayList<Order> arrayOrder;
     int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
+    FirebaseAuth mAuth;
 
     private Double saleTotal;
 
@@ -42,10 +53,12 @@ public class Analytics extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analytics);
+        mAuth = FirebaseAuth.getInstance();
 
         TotalProductTv=findViewById(R.id.tv_total_product);
         TotalSalesTV=findViewById(R.id.tv_total_sales);
         TotalOrderTV=findViewById(R.id.tv_total_order);
+        TotalSpendTV=findViewById(R.id.tv_total_spend);
         //RecyclerView
         productAView = findViewById(R.id.rv_product_analytics);
         productALayoutManager = new GridLayoutManager(this, 1);
@@ -81,34 +94,50 @@ public class Analytics extends AppCompatActivity {
             }
         });
 
-//      Total Sales
+//      Total Spend
 
-        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document : task.getResult()){
-//                        Double totalPrice = document.getDouble("totalPrice");
-//                        saleTotal += totalPrice;
-                        Order order = document.toObject(Order.class);
-                        arrayOrder.add(order);
-                    }
-//                    TotalSalesTV.setText("" +arrayOrder.size());
-                }else{
-                    Log.d("debug", "Error");
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Object spendTotal = documentSnapshot.get("totalSpend");
+                    TotalSpendTV.setText("" + spendTotal);
                 }
-
-                for (int i = 1; i<arrayOrder.size(); i++){
-                //    saleTotal = saleTotal + arrayOrder.get(i).getTotalPrice();
-                }
-
-              //  TotalSalesTV.setText(String.valueOf(saleTotal));
             }
         });
 
 
 
-    }
+
+//      Total Sales
+//
+//        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if(task.isSuccessful()){
+//                    for(QueryDocumentSnapshot document : task.getResult()){
+////                        Double totalPrice = document.getDouble("totalPrice");
+////                        saleTotal += totalPrice;
+//                        Order order = document.toObject(Order.class);
+//                        arrayOrder.add(order);
+//                    }
+////                    TotalSalesTV.setText("" +arrayOrder.size());
+//                }else{
+//                    Log.d("debug", "Error");
+//                }
+//
+//                for (int i = 1; i<arrayOrder.size(); i++){
+//                //    saleTotal = saleTotal + arrayOrder.get(i).getTotalPrice();
+//                }
+//
+//              //  TotalSalesTV.setText(String.valueOf(saleTotal));
+//            }
+//        });
+//
+//
+//
+//    }
 
 //    private Integer totalSales() {
 //        FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -154,4 +183,5 @@ public class Analytics extends AppCompatActivity {
 //        return arrayOrder.size();
 //
 //    }
+    }
 }
