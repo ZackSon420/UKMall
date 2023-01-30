@@ -14,9 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -136,9 +139,22 @@ public class UserProductPage extends AppCompatActivity {
 
         String username = intent.getStringExtra("name");*/
 
-        sessionManager =new SessionManager(this);
-        String username = sessionManager.getUsername();
+//        sessionManager =new SessionManager(this);
+//        String username = sessionManager.getUsername();
+//
+//        tv_userName.setText(username);
 
-        tv_userName.setText(username);
+        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+
+                    Object name = documentSnapshot.get("userName");
+                    tv_userName.setText(""+name);
+
+                }
+            }
+        });
     }
 }

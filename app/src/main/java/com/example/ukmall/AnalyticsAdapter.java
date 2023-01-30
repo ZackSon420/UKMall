@@ -9,13 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
 public class AnalyticsAdapter extends RecyclerView.Adapter<AnalyticsAdapter.ProductAViewHolder> {
 
-    int [] arr;
+//    int [] arr;
+    List<Product> productList;
 
-    public AnalyticsAdapter(int[] arr) {
+    public AnalyticsAdapter(List<Product> productList) {
 
-        this.arr = arr;
+        this.productList = productList;
     }
 
     @NonNull
@@ -29,18 +34,20 @@ public class AnalyticsAdapter extends RecyclerView.Adapter<AnalyticsAdapter.Prod
 
     @Override
     public void onBindViewHolder(@NonNull ProductAViewHolder holder, int position) {
+
+        Product product = productList.get(position);
         //set value into component
-        holder.ivProduct.setImageResource(arr[position]);
-        holder.tvProductName.setText("Brownies");
-        holder.tvProductPrice.setText("RM10");
-        holder.tvTotalUnitSold.setText("100");
+        Picasso.get().load(product.getUrl()).into(holder.ivProduct);
+        holder.tvProductName.setText(product.getProductTitle());
+        holder.tvProductPrice.setText("RM" + product.getOriginalPrice());
+        holder.tvTotalUnitSold.setText(""+product.getBought());
         holder.tvTotalSale.setText("1000");
 
     }
 
     @Override
     public int getItemCount() {
-        return arr.length;
+        return productList.size();
     }
 
     public class ProductAViewHolder extends RecyclerView.ViewHolder{

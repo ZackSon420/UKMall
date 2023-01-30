@@ -2,6 +2,9 @@ package com.example.ukmall;
 
 import static android.content.ContentValues.TAG;
 
+import static com.google.firebase.firestore.Query.Direction.ASCENDING;
+import static com.google.firebase.firestore.Query.Direction.DESCENDING;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,10 +33,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +48,10 @@ public class Analytics extends AppCompatActivity {
     RecyclerView.LayoutManager productALayoutManager;
     AnalyticsAdapter analyticsAdapter;
     private TextView TotalProductTv, TotalSalesTV, TotalOrderTV, TotalSpendTV;
-    ArrayList<Order> arrayOrder;
-    int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
+    ArrayList<Product> productList;
+//    int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
     FirebaseAuth mAuth;
+    FirebaseFirestore db;
 
     private Double saleTotal;
 
@@ -63,12 +69,14 @@ public class Analytics extends AppCompatActivity {
         productAView = findViewById(R.id.rv_product_analytics);
         productALayoutManager = new GridLayoutManager(this, 1);
         productAView.setLayoutManager(productALayoutManager);
-        analyticsAdapter = new AnalyticsAdapter(arr);
+
+        productList=new ArrayList<>();
+        getSellerProduct();
+        analyticsAdapter = new AnalyticsAdapter(productList);
 
         productAView.setAdapter(analyticsAdapter);
         productAView.setHasFixedSize(true);
 
-        arrayOrder = new ArrayList<Order>();
 
 //      Total Product
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -107,6 +115,47 @@ public class Analytics extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void getSellerProduct(){
+        productList.clear();
+
+        db = FirebaseFirestore.getInstance();
+
+//        db.collection("product").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).orderBy("bought", DESCENDING).get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        for(DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()){
+//                            switch (dc.getType()) {
+//                            case ADDED:
+//                            productList.add(dc.getDocument().toObject(Product.class));
+//                            analyticsAdapter.notifyDataSetChanged();
+//                            break;
+//                            }
+//                        }
+//                    }
+//                });
+
+
+
+        db.collection("product").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("Error", e.getMessage());
+                }
+                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case ADDED:
+                            productList.add(dc.getDocument().toObject(Product.class));
+                            analyticsAdapter.notifyDataSetChanged();
+                            break;
+                    }
+                }
+            }
+        });
+    }
 
 
 
@@ -183,5 +232,4 @@ public class Analytics extends AppCompatActivity {
 //        return arrayOrder.size();
 //
 //    }
-    }
 }
