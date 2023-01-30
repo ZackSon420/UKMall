@@ -1,6 +1,5 @@
 package com.example.ukmall;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -22,19 +21,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.ukmall.repository.CartRepo;
 import com.example.ukmall.utils.model.Item;
 import com.example.ukmall.viewmodel.CartViewModel;
 
 import android.widget.Spinner;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
 import com.stripe.android.paymentsheet.PaymentSheetResult;
@@ -48,7 +45,6 @@ import java.util.HashMap;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarException;
 
 public class MakeOrder extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners, Serializable{
 
@@ -61,6 +57,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     String EphericalKey;
     String ClientSecret;
     FirebaseAuth mAuth;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private RecyclerView cartView;
     RecyclerView.LayoutManager cartlayoutManager;
@@ -335,7 +332,6 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     }
 
     private void addOrder() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference orderRef = db.collection("order");
 
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -379,8 +375,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onSuccess(Void unused) {
 
-                DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
-                userRef.update("totalSpend", totalPrice);
+                updateTotalSpend(totalPrice);
 
                 Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
 
@@ -390,6 +385,26 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                 intent.putExtra("totalPrice", totalPrice);
                 intent.putExtra("orderID", orderid);
                 startActivity(intent);
+            }
+        });
+    }
+
+    public void updateTotalSpend(Double totalPrice){
+        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Double initSpend, totalSpend;
+
+                    Object spendTotal = documentSnapshot.get("totalSpend");
+                    initSpend = (Double) spendTotal;
+                    totalSpend = initSpend+totalPrice;
+
+                    DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+                    userRef.update("totalSpend", totalSpend);
+
+                }
             }
         });
     }
