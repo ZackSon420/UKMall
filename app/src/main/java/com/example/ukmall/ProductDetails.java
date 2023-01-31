@@ -171,14 +171,11 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
     private void insertToRoom() {
 
-
-
-
         Item item = new Item();
         Intent intent = getIntent();
 
-
         item.setItemName(intent.getStringExtra("productName"));
+        item.setProductID(intent.getStringExtra("productId"));
 
        // item.setShoeBrandName(shoe.getShoeBrandName());
         String prd= intent.getStringExtra("productPrice");
@@ -251,9 +248,6 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-
-
-
         startActivity(new Intent(ProductDetails.this , Cart.class));
 
 //----------------------------------------------------------------------------------------------------------------------------------------
@@ -306,11 +300,6 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
     //function add to cart
     private void addToCart() {
-
-
-
-
-
 
 
         if(quantity > 0) {

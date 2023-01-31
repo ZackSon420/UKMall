@@ -13,6 +13,7 @@ public class Item {
     @PrimaryKey(autoGenerate = true)
 
     private int itemID;
+    private String productID;
     private String itemName;
     private String itemImage;
     private double itemPrice;
@@ -26,6 +27,14 @@ public class Item {
 
     public void setItemID(int itemID) {
         this.itemID = itemID;
+    }
+
+    public String getProductID() {
+        return productID;
+    }
+
+    public void setProductID(String productID) {
+        this.productID = productID;
     }
 
     public String getItemName() {

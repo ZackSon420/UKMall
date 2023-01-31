@@ -143,8 +143,9 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onClick(View v) {
 
-                PaymentFlow();
-                //makeOrder();
+//                PaymentFlow();
+                makeOrder();
+
             }
         });
 
@@ -156,20 +157,26 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 
                 cartAdapter.setItemCartList(productCarts);
                 for (int i=0;i<productCarts.size();i++){
-                    String itemName;
+                    String itemName, productID;
                     Double itemPrice;
-                    Integer quantity;
+                    Integer quantity, totalBought;
+
                     price = price + productCarts.get(i).getTotalItemPrice();
 
+                    productID = productCarts.get(i).getProductID();
                     itemName = productCarts.get(i).getItemName();
                     itemPrice = productCarts.get(i).getItemPrice();
                     quantity = productCarts.get(i).getQuantity();
 
+
                     HashMap<String, Object> prodhashMap = new HashMap<>();
+                    prodhashMap.put("productID", productID);
                     prodhashMap.put("itemName", itemName);
                     prodhashMap.put("itemPrice", itemPrice);
                     prodhashMap.put("quantity", quantity);
                     arrayOrder.add(prodhashMap);
+
+                    db.collection("product").document(productID).update("bought", quantity);
                 }
                 //selectedProductList.addAll(productCarts);
                 TVsubprice.setText(String.valueOf(price));
@@ -361,13 +368,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 
         for(int i = 0; i<arrayOrder.size();i++){
 
-            db.collection("order").document(orderid).collection("ordered").add(arrayOrder.get(i)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-//                    Toast.makeText(MakeOrder.this, "Sub document successful", Toast.LENGTH_SHORT).show();
+            db.collection("order").document(orderid).collection("ordered").add(arrayOrder.get(i));
 
-                }
-            });
 
         }
 
