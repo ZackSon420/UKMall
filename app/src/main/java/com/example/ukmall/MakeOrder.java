@@ -143,8 +143,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onClick(View v) {
 
-//                PaymentFlow();
-                makeOrder();
+                PaymentFlow();
+//                makeOrder();
 
             }
         });

@@ -75,7 +75,7 @@ public class UserProductPage extends AppCompatActivity {
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottomNavigation);
 
         // Utk set Home as default
-        bottomNavigationView.setSelectedItemId(R.id.home);
+        bottomNavigationView.setSelectedItemId(R.id.account);
 
         //Declare Session
         sessionManager = new SessionManager(this);
@@ -105,8 +105,8 @@ public class UserProductPage extends AppCompatActivity {
                         return true;
 
                     case R.id.account:
-                        startActivity(new Intent(getApplicationContext(),Analytics.class));
-                        Toast.makeText(UserProductPage.this, "Analytics", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(),Account_User.class));
+                        Toast.makeText(UserProductPage.this, "My Account", Toast.LENGTH_SHORT).show();
                         return true;
 
                 }
