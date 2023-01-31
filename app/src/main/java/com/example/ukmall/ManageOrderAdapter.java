@@ -1,7 +1,10 @@
 package com.example.ukmall;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,7 +50,25 @@ public class ManageOrderAdapter extends RecyclerView.Adapter<ManageOrderAdapter.
         Order order = orderArrayList.get(position);
         //Ambil gambar dari link dalam product
         //Picasso.get().load(order.getUrl()).into(holder.ivCust);
-        //holder.tvCustName.setText(order.);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference orderRef = db.collection("order").document(order.getOrderId());
+        orderRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                if (snapshot != null && snapshot.exists()) {
+                    String status = snapshot.getString("username");
+                    holder.tvCustName.setText(status);
+                  //  editor.putString("status", status);
+                   // editor.apply();
+                    //Log.d(TAG, "Order status: " + status);
+
+                } else {
+                    Log.d(TAG, "No document found with id: " + order.getOrderId());
+                }
+            }
+        });
+       // holder.tvCustName.setText(order.);
         holder.tvOrderId.setText(order.getOrderId());
         //holder.tvOrderDate.setText(order.);
         holder.tvTotalOrder.setText("RM" + (order.getTotalPrice()).toString());

@@ -1,15 +1,11 @@
 package com.example.ukmall;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,38 +18,31 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ManageOrder extends AppCompatActivity  {
-
-    //Declare Recycler View
+public class ManageOrderSeller extends AppCompatActivity {
 
     private RecyclerView manageOrderRV;
     RecyclerView.LayoutManager layoutManager;
     ManageOrderAdapter manageOrderAdapter;
     FirebaseFirestore db;
+    TabLayout  tabLayout;
     ArrayList<Order> orderArrayList;
-    TabLayout tabLayout;
-    Button btnAnalytics;
-    String custStatus=null;
-    public static String c_status=null;
+    ArrayList<Order> orderArrayList2;
+    private ManageOrderAdapter manageOrderAdapter2;
+    public static String status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manage_order);
+        setContentView(R.layout.activity_manage_order_seller2);
 
-    //    btnAnalytics = findViewById(R.id.btn_analytic);
-       // btnAnalytics.setOnClickListener(this);
-
-
-        //recycler view order
         manageOrderRV = findViewById(R.id.rv_manage_order);
+        tabLayout=findViewById(R.id.tabs2);
         layoutManager=new GridLayoutManager(this, 1);
         manageOrderRV.setLayoutManager(layoutManager);
-        tabLayout=findViewById(R.id.tabs2);
+
         db = FirebaseFirestore.getInstance();
         orderArrayList = new ArrayList<Order>();
-        manageOrderAdapter =new ManageOrderAdapter(ManageOrder.this, orderArrayList);
-
+        manageOrderAdapter =new ManageOrderAdapter(ManageOrderSeller.this, orderArrayList);
         manageOrderRV.setAdapter(manageOrderAdapter);
         String userId = null;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -63,7 +52,6 @@ public class ManageOrder extends AppCompatActivity  {
         } else {
             // No user is signed in
         }
-        Log.d(TAG, "UserID: " + userId);
         EventChangeListener(userId);
         manageOrderRV.setHasFixedSize(true);
         String finalUserId = userId;
@@ -99,44 +87,41 @@ public class ManageOrder extends AppCompatActivity  {
         });
 
     }
-
     private void EventChangeListener(String userId) {
-
         orderArrayList.clear();
 
         db.collectionGroup("order")
-                .whereEqualTo("customerID", userId+"")
+                .whereEqualTo("sellerID", userId+"")
                 .whereEqualTo("status", "pack")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-
-                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
-                        if(dc.getType()==DocumentChange.Type.ADDED){
-                            orderArrayList.add(dc.getDocument().toObject(Order.class));
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentChange dc : task.getResult().getDocumentChanges()) {
+                                if (dc.getType() == DocumentChange.Type.ADDED) {
+                                    orderArrayList.add(dc.getDocument().toObject(Order.class));
+                                }
+                            }
+                            manageOrderAdapter.notifyDataSetChanged();
                         }
                     }
-                    manageOrderAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-        c_status="pack";
+                });
+        status="pack";
+
     }
 
     private void EventChangeListener2(String userId) {
         orderArrayList.clear();
 
         db.collectionGroup("order")
-                .whereEqualTo("customerID", userId+"")
+                .whereEqualTo("sellerID", userId+"")
                 .whereEqualTo("status", "ready")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-
-                            for(DocumentChange dc : task.getResult().getDocumentChanges()){
-                                if(dc.getType()==DocumentChange.Type.ADDED){
+                            for (DocumentChange dc : task.getResult().getDocumentChanges()) {
+                                if (dc.getType() == DocumentChange.Type.ADDED) {
                                     orderArrayList.add(dc.getDocument().toObject(Order.class));
                                 }
                             }
@@ -144,22 +129,21 @@ public class ManageOrder extends AppCompatActivity  {
                         }
                     }
                 });
-        c_status="ready";
+        status="ready";
+
     }
     private void EventChangeListener3(String userId) {
-
         orderArrayList.clear();
 
         db.collectionGroup("order")
-                .whereEqualTo("customerID", userId+"")
+                .whereEqualTo("sellerID", userId+"")
                 .whereEqualTo("status", "completed")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-
-                            for(DocumentChange dc : task.getResult().getDocumentChanges()){
-                                if(dc.getType()==DocumentChange.Type.ADDED){
+                            for (DocumentChange dc : task.getResult().getDocumentChanges()) {
+                                if (dc.getType() == DocumentChange.Type.ADDED) {
                                     orderArrayList.add(dc.getDocument().toObject(Order.class));
                                 }
                             }
@@ -167,21 +151,8 @@ public class ManageOrder extends AppCompatActivity  {
                         }
                     }
                 });
-        c_status="completed";
+        status="completed";
     }
 
 
-
-
-
-
-//    @Override
-//    public void onClick(View view) {
-//        switch (view.getId()) {
-//
-//            case R.id.btn_analytic:
-//                startActivity(new Intent(this, Analytics.class));
-//                break;
-//        }
-//    }
 }
