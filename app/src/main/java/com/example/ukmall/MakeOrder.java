@@ -143,7 +143,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onClick(View v) {
 
-                PaymentFlow();
+//                PaymentFlow();
+                makeOrder();
 
             }
         });
@@ -374,10 +375,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 
 
         for(int i = 0; i<arrayOrder.size();i++){
-
             db.collection("order").document(orderid).collection("ordered").add(arrayOrder.get(i));
-
-
         }
 
         db.collection("OrderDetail").document(orderid).set(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -398,17 +396,17 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         });
     }
 
-    public void updateTotalSpend(Double totalPrice) {
+    public void updateTotalSpend(Double totalPrice){
         DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
+                if(documentSnapshot.exists()){
                     Double initSpend, totalSpend;
 
-                    Object spendTotal = documentSnapshot.get("totalSpend");
+                    Double spendTotal = Double.parseDouble(documentSnapshot.get("totalSpend").toString());
                     initSpend = (Double) spendTotal;
-                    totalSpend = initSpend + totalPrice;
+                    totalSpend = initSpend+totalPrice;
 
                     DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
                     userRef.update("totalSpend", totalSpend);
@@ -417,6 +415,23 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             }
         });
     }
+//    public void updateTotalSpend(Double totalPrice) {
+//        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+//        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if (documentSnapshot.exists()) {
+//
+//                    Object spendTotal = documentSnapshot.get("totalSpend");
+//                    Double totalSpend = totalPrice + (Double) spendTotal;
+//
+//                    DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+//                    userRef.update("totalSpend", totalSpend);
+//
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public void onClick(View view) {
