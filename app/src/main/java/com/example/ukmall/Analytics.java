@@ -211,23 +211,23 @@ public class Analytics extends AppCompatActivity {
 //            }
 //        });
 //
-////        db.collectionGroup("order").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-////            @Override
-////            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-////                if (task.isSuccessful()) {
-////
-////                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
-////                        if(dc.getType()==DocumentChange.Type.ADDED){
-////                            arrayOrder.add(dc.getDocument().toObject(Order.class));
-////                        }
-////                    }
-////                }
-////            }
-////        });
+//        db.collectionGroup("order").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
 //
-////        for (int i = 0; i<arrayOrder.size(); i++){
-////            totalSales = totalSales + arrayOrder.get(i).getTotalPrice();
-////        }
+//                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
+//                        if(dc.getType()==DocumentChange.Type.ADDED){
+//                            arrayOrder.add(dc.getDocument().toObject(Order.class));
+//                        }
+//                    }
+//                }
+//            }
+//        });
+
+//        for (int i = 0; i<arrayOrder.size(); i++){
+//            totalSales = totalSales + arrayOrder.get(i).getTotalPrice();
+//        }
 //
 //        return arrayOrder.size();
 //
