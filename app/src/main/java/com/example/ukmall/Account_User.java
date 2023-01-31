@@ -84,7 +84,7 @@ public class Account_User extends AppCompatActivity implements View.OnClickListe
                 //startActivity(new Intent(getApplicationContext(), Add_Product.class));
                 Toast.makeText(Account_User.this, "Manage Order", Toast.LENGTH_SHORT).show();
 
-            case R.id.btn_analytic:
+            case R.id.bt_analytics:
                 startActivity(new Intent(getApplicationContext(), Analytics.class));
                 Toast.makeText(Account_User.this, "Analytics", Toast.LENGTH_SHORT).show();
                 break;

@@ -143,8 +143,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onClick(View v) {
 
-//                PaymentFlow();
-                makeOrder();
+                PaymentFlow();
 
             }
         });
@@ -159,24 +158,32 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                 for (int i=0;i<productCarts.size();i++){
                     String itemName, productID;
                     Double itemPrice;
-                    Integer quantity, totalBought;
+                    final Long[] quantity = new Long[1];
 
                     price = price + productCarts.get(i).getTotalItemPrice();
 
                     productID = productCarts.get(i).getProductID();
                     itemName = productCarts.get(i).getItemName();
                     itemPrice = productCarts.get(i).getItemPrice();
-                    quantity = productCarts.get(i).getQuantity();
-
+                    quantity[0] = Long.valueOf(productCarts.get(i).getQuantity());
 
                     HashMap<String, Object> prodhashMap = new HashMap<>();
                     prodhashMap.put("productID", productID);
                     prodhashMap.put("itemName", itemName);
                     prodhashMap.put("itemPrice", itemPrice);
-                    prodhashMap.put("quantity", quantity);
+                    prodhashMap.put("quantity", quantity[0]);
                     arrayOrder.add(prodhashMap);
 
-                    db.collection("product").document(productID).update("bought", quantity);
+                    db.collection("product").document(productID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Object bought = documentSnapshot.get("bought");
+                            quantity[0] = quantity[0] + (Long) bought;
+
+                            db.collection("product").document(productID).update("bought", quantity[0]);
+                        }
+                    });
+
                 }
                 //selectedProductList.addAll(productCarts);
                 TVsubprice.setText(String.valueOf(price));
@@ -391,17 +398,17 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         });
     }
 
-    public void updateTotalSpend(Double totalPrice){
+    public void updateTotalSpend(Double totalPrice) {
         DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     Double initSpend, totalSpend;
 
                     Object spendTotal = documentSnapshot.get("totalSpend");
                     initSpend = (Double) spendTotal;
-                    totalSpend = initSpend+totalPrice;
+                    totalSpend = initSpend + totalPrice;
 
                     DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
                     userRef.update("totalSpend", totalSpend);
