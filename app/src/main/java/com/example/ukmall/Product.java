@@ -2,13 +2,13 @@ package com.example.ukmall;
 
 public class Product {
     String productId,productTitle, productDescription, url, url2, productStore, productCategory;
-    Double originalPrice;
+    Double originalPrice, totalSale;
     Integer productQuantity, bought;
 
     public Product(){
     }
 
-    public Product(String productId, String productTitle, String productDescription, String url, String url2, String productStore, String productCategory, Double originalPrice, Integer productQuantity, Integer bought) {
+    public Product(String productId, String productTitle, String productDescription, String url, String url2, String productStore, String productCategory, Double originalPrice, Double totalSale, Integer productQuantity, Integer bought) {
         this.productId = productId;
         this.productTitle = productTitle;
         this.productDescription = productDescription;
@@ -17,6 +17,7 @@ public class Product {
         this.productStore = productStore;
         this.productCategory = productCategory;
         this.originalPrice = originalPrice;
+        this.totalSale = totalSale;
         this.productQuantity = productQuantity;
         this.bought = bought;
     }
@@ -99,6 +100,14 @@ public class Product {
 
     public void setBought(Integer bought) {
         this.bought = bought;
+    }
+
+    public Double getTotalSale() {
+        return totalSale;
+    }
+
+    public void setTotalSale(Double totalSale) {
+        this.totalSale = totalSale;
     }
 }
 

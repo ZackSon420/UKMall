@@ -186,7 +186,6 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                     });
 
                 }
-                //selectedProductList.addAll(productCarts);
                 TVsubprice.setText(String.valueOf(price));
                 TVfee.setText(String.valueOf(fee));
                 totalCartPriceTV.setText(String.valueOf(price+fee));
@@ -415,23 +414,6 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             }
         });
     }
-//    public void updateTotalSpend(Double totalPrice) {
-//        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
-//        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                if (documentSnapshot.exists()) {
-//
-//                    Object spendTotal = documentSnapshot.get("totalSpend");
-//                    Double totalSpend = totalPrice + (Double) spendTotal;
-//
-//                    DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
-//                    userRef.update("totalSpend", totalSpend);
-//
-//                }
-//            }
-//        });
-//    }
 
     @Override
     public void onClick(View view) {
