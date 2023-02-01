@@ -14,12 +14,21 @@ public class Item {
 
     private int itemID;
     private String productID;
+    private String sellerID;
     private String itemName;
     private String itemImage;
     private double itemPrice;
 
     private int quantity;
     private double totalItemPrice;
+
+    public String getSellerID() {
+        return sellerID;
+    }
+
+    public void setSellerID(String sellerID) {
+        this.sellerID = sellerID;
+    }
 
     public int getItemID() {
         return itemID;
