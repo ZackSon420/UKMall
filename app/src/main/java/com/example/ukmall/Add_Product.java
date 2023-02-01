@@ -176,6 +176,8 @@ public class Add_Product extends AppCompatActivity {
             hashMap.put("productQuantity", productQuantity);
             hashMap.put("url", "https://firebasestorage.googleapis.com/v0/b/ukmall-f47b3.appspot.com/o/product_images%2FOIP.jpg?alt=media&token=c401a8ef-f83b-4ce9-ba3b-48a432b05e2d"); // set path for no image file
             hashMap.put("originalPrice", originalPrice);
+            hashMap.put("bought", 0);
+            hashMap.put("totalSale", 0);
 
 
             //db.collection("product").document("CUS"+mAuth.getCurrentUser().getUid()).collection("Product").document(productid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -219,6 +221,8 @@ public class Add_Product extends AppCompatActivity {
                                 hashMap.put("productQuantity",productQuantity);
                                 hashMap.put("url", ""+downloadImageUrl);
                                 hashMap.put("originalPrice", originalPrice);
+                                hashMap.put("bought", 0);
+                                hashMap.put("totalSale", 0);
 
                                 //db.collection("product").document("CUS"+mAuth.getCurrentUser().getUid()).collection("Product").document(productid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 db.collection("product").document(productid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -166,6 +166,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                     String itemName, productID;
                     Double itemPrice;
                     final Long[] quantity = new Long[1];
+                    final Double[] totalSale = new Double[1];
 
                     price = price + productCarts.get(i).getTotalItemPrice();
 
@@ -173,6 +174,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                     itemName = productCarts.get(i).getItemName();
                     itemPrice = productCarts.get(i).getItemPrice();
                     quantity[0] = Long.valueOf(productCarts.get(i).getQuantity());
+                    totalSale[0] = Double.valueOf(productCarts.get(i).getTotalItemPrice());
 
                     HashMap<String, Object> prodhashMap = new HashMap<>();
                     prodhashMap.put("productID", productID);
@@ -193,9 +195,12 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             Object bought = documentSnapshot.get("bought");
+
                             quantity[0] = quantity[0] + (Long) bought;
+                            totalSale[0] = totalSale[0] + Double.parseDouble(documentSnapshot.get("totalSale").toString());
 
                             db.collection("product").document(productID).update("bought", quantity[0]);
+                            db.collection("product").document(productID).update("totalSale", totalSale[0]);
                         }
                     });
 
@@ -429,22 +434,22 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 
     public void updateTotalSpend(Double totalPrice) {
         DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
-               userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                   @Override
-                   public void onSuccess(DocumentSnapshot documentSnapshot) {
-                       if (documentSnapshot.exists()) {
-                           Double initSpend, totalSpend;
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Double initSpend, totalSpend;
 
-                           Double spendTotal = Double.parseDouble(documentSnapshot.get("totalSpend").toString());
-                           initSpend = (Double) spendTotal;
-                           totalSpend = initSpend + totalPrice;
+                    Double spendTotal = Double.parseDouble(documentSnapshot.get("totalSpend").toString());
+                    initSpend = (Double) spendTotal;
+                    totalSpend = initSpend+totalPrice;
 
-                           DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
-                           userRef.update("totalSpend", totalSpend);
+                    DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+                    userRef.update("totalSpend", totalSpend);
 
-                       }
-                   }
-               });
+                }
+            }
+        });
     }
 
     //add new sales into seller database

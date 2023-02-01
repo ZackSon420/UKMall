@@ -41,7 +41,7 @@ public class AnalyticsAdapter extends RecyclerView.Adapter<AnalyticsAdapter.Prod
         holder.tvProductName.setText(product.getProductTitle());
         holder.tvProductPrice.setText("RM" + product.getOriginalPrice());
         holder.tvTotalUnitSold.setText(""+product.getBought());
-        holder.tvTotalSale.setText("1000");
+        holder.tvTotalSale.setText("RM"+product.getTotalSale());
 
     }
 
