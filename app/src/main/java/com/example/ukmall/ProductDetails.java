@@ -158,8 +158,8 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                         return true;
 
                     case R.id.account:
-                        startActivity(new Intent(getApplicationContext(),Analytics.class));
-                        Toast.makeText(ProductDetails.this, "Analytics", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(),Account_User.class));
+                        Toast.makeText(ProductDetails.this, "My Account", Toast.LENGTH_SHORT).show();
                         return true;
 
                 }
