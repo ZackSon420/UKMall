@@ -44,6 +44,7 @@ import com.stripe.android.paymentsheet.PaymentSheetResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -53,6 +54,7 @@ import java.util.Map;
 
 public class MakeOrder extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners, Serializable {
 
+    DecimalFormat df = new DecimalFormat("0.00");
     private Button btnMakeOrder;
     private Spinner paymentMethod, deliveryOption;
     String SECRET_KEY = "sk_test_51MQtpKFv1N0LbQC79BxmjHmq4Yk8h5xfDdOiaA0p4l3M8X2Xg1jdH5e1rQSTIVO26eFq8gV9SSyLXTVtciDwbd1D00Wo7aD7ie";
@@ -207,9 +209,9 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 
                 }
                 //selectedProductList.addAll(productCarts);
-                TVsubprice.setText(String.valueOf(price));
-                TVfee.setText(String.valueOf(fee));
-                totalCartPriceTV.setText(String.valueOf(price + fee));
+                TVsubprice.setText(df.format(price));
+                TVfee.setText(df.format(fee));
+                totalCartPriceTV.setText(df.format(price+fee));
 
             }
 

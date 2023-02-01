@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ukmall.utils.model.Item;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class MakeOrderAdapter extends RecyclerView.Adapter<MakeOrderAdapter.MakeOrderViewHolder> {
-
+    DecimalFormat df = new DecimalFormat("0.00");
     private List<Item> itemCartList;
 
     public MakeOrderAdapter(MakeOrder makeOrder) {
@@ -52,7 +53,7 @@ public class MakeOrderAdapter extends RecyclerView.Adapter<MakeOrderAdapter.Make
         Item item = itemCartList.get(position);
         Picasso.get().load(item.getItemImage()).into(holder.iv_product);
         holder.tv_prodname.setText(item.getItemName());
-        holder.tv_prodprice.setText("RM"+item.getItemPrice()+"");
+        holder.tv_prodprice.setText("RM"+df.format(item.getItemPrice()));
         holder.tv_QuantityProduct.setText(item.getQuantity() + "");
     }
 

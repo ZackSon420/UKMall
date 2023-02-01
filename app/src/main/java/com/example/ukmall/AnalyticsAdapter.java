@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class AnalyticsAdapter extends RecyclerView.Adapter<AnalyticsAdapter.ProductAViewHolder> {
@@ -18,6 +19,7 @@ public class AnalyticsAdapter extends RecyclerView.Adapter<AnalyticsAdapter.Prod
 //    int [] arr;
     List<Product> productList;
 
+    DecimalFormat df = new DecimalFormat("0.00");
     public AnalyticsAdapter(List<Product> productList) {
 
         this.productList = productList;
@@ -39,9 +41,9 @@ public class AnalyticsAdapter extends RecyclerView.Adapter<AnalyticsAdapter.Prod
         //set value into component
         Picasso.get().load(product.getUrl()).into(holder.ivProduct);
         holder.tvProductName.setText(product.getProductTitle());
-        holder.tvProductPrice.setText("RM" + product.getOriginalPrice());
+        holder.tvProductPrice.setText("RM" + df.format(product.getOriginalPrice()));
         holder.tvTotalUnitSold.setText(""+product.getBought());
-        holder.tvTotalSale.setText("RM"+product.getTotalSale());
+        holder.tvTotalSale.setText("RM"+ df.format(product.getTotalSale()));
 
     }
 

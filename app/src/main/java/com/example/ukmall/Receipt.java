@@ -40,12 +40,14 @@ import org.w3c.dom.DocumentType;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 
 public class Receipt extends AppCompatActivity {
 
+    DecimalFormat df = new DecimalFormat("0.00");
     private RecyclerView cartView;
     private CartViewModel cartViewModel;
     RecyclerView.LayoutManager cartLayoutManager;
@@ -103,9 +105,9 @@ public class Receipt extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        TVBigPrice.setText(String.valueOf(intent.getDoubleExtra("totalPrice", 0)));
-        TVsubtotal.setText(String.valueOf(intent.getDoubleExtra("subtotal", 0.0)));
-        priceBought.setText(String.valueOf(intent.getDoubleExtra("totalPrice", 0)));
+        TVBigPrice.setText(df.format(intent.getDoubleExtra("totalPrice", 0)));
+        TVsubtotal.setText(df.format(intent.getDoubleExtra("subtotal", 0.0)));
+        priceBought.setText(df.format(intent.getDoubleExtra("totalPrice", 0)));
         TVtransacid.setText(intent.getStringExtra("orderID"));
 
 //        if(!checkPermission()){

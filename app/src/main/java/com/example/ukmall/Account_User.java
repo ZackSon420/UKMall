@@ -19,8 +19,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
+
 public class Account_User extends AppCompatActivity implements View.OnClickListener {
 
+    DecimalFormat df = new DecimalFormat("0.00");
     private SessionManager sessionManager;
     TextView tv_userName, tv_totalSale;
     ImageView toShipIv, toReceiveIv, completeIv;
@@ -128,7 +131,7 @@ public class Account_User extends AppCompatActivity implements View.OnClickListe
                 if(documentSnapshot.exists()){
                     Object totalSales = documentSnapshot.get("totalSales");
 
-                    tv_totalSale.setText(""+totalSales);
+                    tv_totalSale.setText(""+df.format(totalSales));
                 }
             }
         });

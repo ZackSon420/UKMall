@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,8 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class User_RV_Adapter extends RecyclerView.Adapter<User_RV_Adapter.MyViewHolder> {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
+    DecimalFormat df = new DecimalFormat("0.00");
     private LayoutInflater inflater;
     Context context;
 
@@ -62,7 +62,7 @@ public class User_RV_Adapter extends RecyclerView.Adapter<User_RV_Adapter.MyView
         //Ambil gambar dari link dalam product
         Picasso.get().load(product.getUrl()).into(holder.iv_product);
         holder.tv_prodname.setText(product.productTitle);
-        holder.tv_prodprice.setText("RM" + product.originalPrice);
+        holder.tv_prodprice.setText("RM" + df.format(product.originalPrice));
 
 
     }
