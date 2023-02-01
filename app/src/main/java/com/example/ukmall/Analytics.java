@@ -40,6 +40,8 @@ import com.google.firebase.firestore.auth.User;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Analytics extends AppCompatActivity {
@@ -49,7 +51,6 @@ public class Analytics extends AppCompatActivity {
     AnalyticsAdapter analyticsAdapter;
     private TextView TotalProductTv, TotalSalesTV, TotalOrderTV, TotalSpendTV;
     ArrayList<Product> productList;
-//    int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -83,16 +84,11 @@ public class Analytics extends AppCompatActivity {
         CollectionReference collection = db.collection("product");
         CollectionReference orderCollection = db.collection("order");
 
+        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+
         AggregateQuery countQuery = collection.count();
         AggregateQuery countOrderQuery = orderCollection.count();
 
-        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                AggregateQuerySnapshot snapshot = task.getResult();
-                TotalProductTv.setText("" + snapshot.getCount());
-
-            }
-        });
 
         countOrderQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -104,13 +100,17 @@ public class Analytics extends AppCompatActivity {
 
 //      Total Spend
 
-        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
                     Object spendTotal = documentSnapshot.get("totalSpend");
+                    Object totalProduct = documentSnapshot.get("totalProduct");
+                    Object totalSales = documentSnapshot.get("totalSales");
+
                     TotalSpendTV.setText("" + spendTotal);
+                    TotalProductTv.setText(""+totalProduct);
+                    TotalSalesTV.setText(""+totalSales);
                 }
             }
         });
@@ -121,22 +121,6 @@ public class Analytics extends AppCompatActivity {
         productList.clear();
 
         db = FirebaseFirestore.getInstance();
-
-//        db.collection("product").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).orderBy("bought", DESCENDING).get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        for(DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()){
-//                            switch (dc.getType()) {
-//                            case ADDED:
-//                            productList.add(dc.getDocument().toObject(Product.class));
-//                            analyticsAdapter.notifyDataSetChanged();
-//                            break;
-//                            }
-//                        }
-//                    }
-//                });
-
 
 
         db.collection("product").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -149,6 +133,21 @@ public class Analytics extends AppCompatActivity {
                     switch (dc.getType()) {
                         case ADDED:
                             productList.add(dc.getDocument().toObject(Product.class));
+
+                            Collections.sort(productList, new Comparator<Product>() {
+                                @Override
+                                public int compare(Product t1, Product t2) {
+
+                                    if(t1.bought > t2.bought)
+                                        return -1;
+                                    else if(t1.bought<t2.bought)
+                                        return 1;
+                                    else
+                                        return 0;
+                                }
+                            });
+
+
                             analyticsAdapter.notifyDataSetChanged();
                             break;
                     }
@@ -156,80 +155,4 @@ public class Analytics extends AppCompatActivity {
             }
         });
     }
-
-
-
-//      Total Sales
-//
-//        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if(task.isSuccessful()){
-//                    for(QueryDocumentSnapshot document : task.getResult()){
-////                        Double totalPrice = document.getDouble("totalPrice");
-////                        saleTotal += totalPrice;
-//                        Order order = document.toObject(Order.class);
-//                        arrayOrder.add(order);
-//                    }
-////                    TotalSalesTV.setText("" +arrayOrder.size());
-//                }else{
-//                    Log.d("debug", "Error");
-//                }
-//
-//                for (int i = 1; i<arrayOrder.size(); i++){
-//                //    saleTotal = saleTotal + arrayOrder.get(i).getTotalPrice();
-//                }
-//
-//              //  TotalSalesTV.setText(String.valueOf(saleTotal));
-//            }
-//        });
-//
-//
-//
-//    }
-
-//    private Integer totalSales() {
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        CollectionReference orderCollection = db.collection("order");
-//        Double totalSales = 0.0;
-//
-//        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if(task.isSuccessful()){
-//                    for(QueryDocumentSnapshot document : task.getResult()){
-//                        Order order = document.toObject(Order.class);
-//                        arrayOrder.add(order);
-//                    }
-//                }else{
-//                    Toast.makeText(Analytics.this, "Retrieve object failed", Toast.LENGTH_SHORT).show();
-//                    Log.d(TAG,"failed to retrieve",task.getException());
-//                }
-//                if(arrayOrder.size()==0){
-//                    Log.d("FAILED","Failed To Retrieve");
-//                }
-//            }
-//        });
-//
-//        db.collectionGroup("order").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//
-//                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
-//                        if(dc.getType()==DocumentChange.Type.ADDED){
-//                            arrayOrder.add(dc.getDocument().toObject(Order.class));
-//                        }
-//                    }
-//                }
-//            }
-//        });
-
-//        for (int i = 0; i<arrayOrder.size(); i++){
-//            totalSales = totalSales + arrayOrder.get(i).getTotalPrice();
-//        }
-//
-//        return arrayOrder.size();
-//
-//    }
 }
