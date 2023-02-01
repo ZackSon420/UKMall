@@ -197,9 +197,11 @@
         android:background="@drawable/rectangle"
         android:elevation="2dp"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LayoutHeader">
+        app:layout_constraintTop_toBottomOf="@+id/LayoutHeader"
+        tools:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
