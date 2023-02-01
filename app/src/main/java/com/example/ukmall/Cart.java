@@ -17,6 +17,7 @@ import com.example.ukmall.utils.model.Item;
 import com.example.ukmall.viewmodel.CartViewModel;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class Cart extends AppCompatActivity implements View.OnClickListener,Cart
     private CartViewModel cartViewModel;
     private TextView totalCartPriceTV;
     public List<Item> selectedProductList;
+    DecimalFormat df = new DecimalFormat("0.00");
 
     Button bt_CheckOut;
 
@@ -64,7 +66,8 @@ public class Cart extends AppCompatActivity implements View.OnClickListener,Cart
                     price = price + productCarts.get(i).getTotalItemPrice();
                 }
                 //selectedProductList.addAll(productCarts);
-                totalCartPriceTV.setText(String.valueOf(price));
+//                String strPrice = String.valueOf(price);
+                totalCartPriceTV.setText(df.format(price));
 
             }
 

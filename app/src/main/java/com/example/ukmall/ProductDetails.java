@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,6 +48,7 @@ import java.util.List;
 public class ProductDetails extends AppCompatActivity implements View.OnClickListener {
 
 
+    DecimalFormat df = new DecimalFormat("0.00");
     //private static final String KEY_PRODUCT_NAME = "name";
     //private static final String KEY_PRODUCT_DESC = "description";
     //private static final String KEY_STORE_NAME = "name";
@@ -108,7 +110,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         tvProductID.setText(intent.getStringExtra("productId"));
         tvProductName.setText(intent.getStringExtra("productName"));
         tvProductDesc.setText(intent.getStringExtra("productDesc"));
-        tvProductPrice.setText(intent.getStringExtra("productPrice"));
+        tvProductPrice.setText(df.format(intent.getStringExtra("productPrice")));
         tvStoreName.setText(intent.getStringExtra("store"));
         img = intent.getStringExtra("productImage");
         img2 = intent.getStringExtra("productImage2");
@@ -313,89 +315,4 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    //display all product details when button clicked
-    /*private void loadProduct () {
-        //list of images
-        ArrayList<SlideModel> slideModels = new ArrayList<>();
-
-        //get details in product document
-        productRef.get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if (documentSnapshot.exists()) {
-                                String pName = documentSnapshot.getString(KEY_PRODUCT_NAME);
-                                String pDesc = documentSnapshot.getString(KEY_PRODUCT_DESC);
-                                //String pPrice = documentSnapshot.getString(KEY_PRODUCT_PRICE);
-                                //String pImage = documentSnapshot.getString(KEY_PRODUCT_IMAGE);
-                                //String sName = documentSnapshot.getString(KEY_STORE_NAME);
-
-                                //Map<String, Object> product = documentSnapshot.getData();
-                                tvProductName.setText(pName);
-                                tvProductDesc.setText(pDesc);
-                                //tvProductPrice.setText(pPrice);
-                                //ivProduct.setImageResource(pImage);
-                                //tvStoreName.setText(sName);
-                            } else {
-                                Toast.makeText(ProductDetails.this, "Document does not exist", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ProductDetails.this, "Error!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            //get store name (try look for easier way later)
-            storeRef.get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if (documentSnapshot.exists()) {
-                                String sName = documentSnapshot.getString(KEY_STORE_NAME);
-
-                                tvStoreName.setText(sName);
-                            } else {
-                                Toast.makeText(ProductDetails.this, "Document does not exist", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ProductDetails.this, "Error!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            //get image to put inside image slider
-            db.collection("imageTest").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            // check if task success
-                            if (task.isSuccessful()) {
-
-                                for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-                                    slideModels.add(new SlideModel(queryDocumentSnapshot.getString("url"), ScaleTypes.FIT));
-                                    imageSlider.setImageList(slideModels, ScaleTypes.FIT);
-                                }
-
-                            } else {
-                                Toast.makeText(ProductDetails.this, "Cant load Images", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ProductDetails.this, "FAIL : Cant load Images", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-
-     */
 }

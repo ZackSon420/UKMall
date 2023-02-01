@@ -10,10 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.MyViewHolder> {
 
+    DecimalFormat df = new DecimalFormat("0.00");
     Context context;
     static ArrayList<user> sellerArrayList;
 
@@ -38,7 +40,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.MyViewHolder
         holder.tvSellerName.setText(user.getUserName());
         //holder.tvSellerId.setText(seller.getSellerId());
         holder.tvTotalProduct.setText(user.getTotalProduct().toString());              //set number product
-        holder.tvTotalSales.setText("RM" + (user.getTotalSales()).toString());         //set total sales
+        holder.tvTotalSales.setText("RM" + (df.format(user.getTotalSales())));         //set total sales
     }
 
     @Override

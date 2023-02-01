@@ -41,6 +41,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,6 +49,7 @@ import java.util.List;
 
 public class Analytics extends AppCompatActivity {
 
+    DecimalFormat df = new DecimalFormat("0.00");
     private RecyclerView productAView;
     RecyclerView.LayoutManager productALayoutManager;
     AnalyticsAdapter analyticsAdapter;
@@ -161,9 +163,9 @@ public class Analytics extends AppCompatActivity {
                     Object totalProduct = documentSnapshot.get("totalProduct");
                     Object totalSales = documentSnapshot.get("totalSales");
 
-                    TotalSpendTV.setText("" + spendTotal);
+                    TotalSpendTV.setText("" + df.format(spendTotal));
                     TotalProductTv.setText(""+totalProduct);
-                    TotalSalesTV.setText(""+totalSales);
+                    TotalSalesTV.setText(""+df.format(totalSales));
                 }
             }
         });

@@ -14,11 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ukmall.utils.model.Item;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-
+    DecimalFormat df = new DecimalFormat("0.00");
     private CartClickedListeners cartClickedListeners;
     private List<Item> itemCartList;
 
@@ -59,7 +60,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
        // holder.iv_product.setImageResource(item.getItemImage());
         Picasso.get().load(item.getItemImage()).into(holder.iv_product);
         holder.tv_prodname.setText(item.getItemName());
-        holder.tv_prodprice.setText("RM"+item.getItemPrice()+"");
+        holder.tv_prodprice.setText("RM"+df.format(item.getItemPrice()));
         holder.tv_QuantityProduct.setText(item.getQuantity() + "");
      //   holder.shoePriceTv.setText(item.getTotalItemPrice() + "");
 

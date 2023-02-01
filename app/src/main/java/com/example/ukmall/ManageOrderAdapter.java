@@ -22,10 +22,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class ManageOrderAdapter extends RecyclerView.Adapter<ManageOrderAdapter.MyViewHolder> {
 
+    DecimalFormat df = new DecimalFormat("0.00");
     Context context;
     static ArrayList<Order> orderArrayList;
 
@@ -71,7 +73,7 @@ public class ManageOrderAdapter extends RecyclerView.Adapter<ManageOrderAdapter.
        // holder.tvCustName.setText(order.);
         holder.tvOrderId.setText(order.getOrderId());
         //holder.tvOrderDate.setText(order.);
-        holder.tvTotalOrder.setText("RM" + (order.getTotalPrice()).toString());
+        holder.tvTotalOrder.setText("RM" + (df.format(order.getTotalPrice())));
     }
 
     @Override

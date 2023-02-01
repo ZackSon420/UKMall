@@ -10,14 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.AggregateQuery;
@@ -29,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +33,7 @@ public class Admin extends AppCompatActivity implements View.OnClickListener{
 
     //Declare Recycler View
 
-    private LineChart lineChart;
+    DecimalFormat df = new DecimalFormat("0.00");
     private RecyclerView topSellerRV;
     RecyclerView.LayoutManager layoutManager;
     AdminAdapter adminAdapter;
@@ -102,52 +95,6 @@ public class Admin extends AppCompatActivity implements View.OnClickListener{
         EventChangeListener();
         topSellerRV.setHasFixedSize(true);
 
-        //Line Chart
-        lineChart = findViewById(R.id.activity_main_linechart);
-        //periodRadioGroup = findViewById(R.id.activity_main_period_radiogroup);
-        //intervalRadioGroup = findViewById(R.id.activity_main_priceinterval);
-        LineDataSet lineDataSet = new LineDataSet(dataValues(),"Total Sale");
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(lineDataSet);
-        configureLineChart();
-
-        LineData data = new LineData(dataSets);
-        lineChart.setData(data);
-        lineChart.invalidate();
-        //getSalesData();
-
-    }
-
-    private void getSalesData() {
-    }
-
-    private void configureLineChart() {
-        Description desc = new Description();
-        desc.setText("Total Price");
-        desc.setTextSize(10);
-        lineChart.setDescription(desc);
-
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.setValueFormatter(new ValueFormatter() {
-            private final SimpleDateFormat mFormat = new SimpleDateFormat("dd MMM", Locale.ENGLISH);
-
-            @Override
-            public String getFormattedValue(float value) {
-                long millis = (long) value * 1000L;
-                return mFormat.format(new Date(millis));
-            }
-        });
-    }
-
-    private ArrayList<Entry> dataValues() {
-        {
-            ArrayList<Entry> dataVals = new ArrayList<Entry>();
-            dataVals.add(new Entry(0, 5));
-            dataVals.add(new Entry(1, 12));
-            dataVals.add(new Entry(2, 19));
-            dataVals.add(new Entry(3, 20));
-            return dataVals;
-        }
     }
 
     private void getTotalSales() {
@@ -163,7 +110,7 @@ public class Admin extends AppCompatActivity implements View.OnClickListener{
                 }else{
                     Log.d("debug", "Error");
                 }
-                tvTotalSales.setText(String.valueOf("RM" + totalSales));
+                tvTotalSales.setText(String.valueOf("RM" + df.format(totalSales)));
             }
         });
     }

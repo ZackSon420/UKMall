@@ -138,10 +138,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
+                android:layout_marginEnd="2dp"
                 android:text="RM"
                 android:textColor="#FFFFFF"
                 android:textSize="17sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/tv_total_sales"
                 app:layout_constraintStart_toEndOf="@+id/view"
                 app:layout_constraintTop_toTopOf="@+id/tv_total_sales" />
 
@@ -233,10 +235,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="36dp"
+                android:layout_marginEnd="6dp"
                 android:text="RM"
                 android:textColor="#FFFFFF"
                 android:textSize="17sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/tv_total_spend"
                 app:layout_constraintStart_toStartOf="@+id/textView41"
                 app:layout_constraintTop_toTopOf="parent" />
 

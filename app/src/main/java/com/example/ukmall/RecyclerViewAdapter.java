@@ -14,12 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ukmall.utils.model.Item;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     Context context;
 
+    DecimalFormat df = new DecimalFormat("0.00");
     ArrayList<Product> productArrayList;
     //Array ganti dgn product kat firebase
     int [] arr;
@@ -51,7 +53,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //Ambil gambar dari link dalam product
         Picasso.get().load(product.getUrl()).into(holder.iv_product);
         holder.tv_prodname.setText(product.productTitle);
-        holder.tv_prodprice.setText("RM" + product.originalPrice);
+        holder.tv_prodprice.setText("RM" + df.format(product.originalPrice));
+//        holder.tv_prodprice.setText("RM" + df.format(product.originalPrice));
     }
 
     @Override
