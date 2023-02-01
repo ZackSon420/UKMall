@@ -15,6 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UKMall"
         tools:targetApi="31">
+
+        <activity
+            android:name=".Admin"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".Account_User"
             android:exported="false">
@@ -120,21 +128,21 @@
         </activity>
         <activity
             android:name=".ManageOrder"
-            android:exported="true" >
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".ManageOrderSeller"
-            android:exported="true" >
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".OrderDetails"
-            android:exported="true" >
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
