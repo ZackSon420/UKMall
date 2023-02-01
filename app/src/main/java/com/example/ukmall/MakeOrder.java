@@ -377,15 +377,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     private void addOrder() {
         CollectionReference orderRef = db.collection("order");
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("orderId", orderid);
-        hashMap.put("orderStatus", orderStatus);
-        hashMap.put("totalPrice", totalPrice);
-        hashMap.put("paymentMethod", paymentMethodStr);
-        hashMap.put("deliveryOption", deliveryOptionStr);
-        hashMap.put("sellerId", FinalSellerId);
-
-        db.collection("order").document(orderid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+        db.collection("user").document(mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
@@ -409,10 +401,10 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 
                         }
                     });
-
                 }
             }
         });
+
 
         //FirebaseFirestore db = FirebaseFirestore.getInstance();
         //CollectionReference orderDetailRef = db.collection("orderDetail");
