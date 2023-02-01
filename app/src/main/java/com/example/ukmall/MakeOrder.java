@@ -364,7 +364,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         //Fetch from database as Map
                         FinalSellerId = (String) document.getData().get("userId");
-                        Toast.makeText(MakeOrder.this,"SELLER ID " + FinalSellerId, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(MakeOrder.this,"SELLER ID " + FinalSellerId, Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -425,7 +425,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             public void onSuccess(Void unused) {
 
                 updateTotalSpend(totalPrice);
-                updateTotalSale("OQZAMnDhMqZZzjYkMQV5904TpkH2", (totalPrice-1));
+                updateTotalSale(FinalSellerId, (totalPrice-1));
 
                 Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
 
