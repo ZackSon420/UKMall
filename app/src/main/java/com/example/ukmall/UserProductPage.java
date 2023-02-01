@@ -30,6 +30,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserProductPage extends AppCompatActivity {
 
@@ -115,6 +117,7 @@ public class UserProductPage extends AppCompatActivity {
         });
     }
 
+    Integer totalProduct =0;
     private void EventChangeListener() {
         productArrayList.clear();
 
@@ -129,13 +132,24 @@ public class UserProductPage extends AppCompatActivity {
                     switch (dc.getType()) {
                         case ADDED:
                             productArrayList.add(dc.getDocument().toObject(Product.class));
+                            totalProduct = productArrayList.size();
                             recyclerViewAdapter.notifyDataSetChanged();
+
+                            DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+                            userRef.update("totalProduct", totalProduct);
+
                             break;
                     }
                 }
             }
         });
     }
+
+            /*private void setTotalProduct(Integer totalP) {
+                db.collection("user").whereEqualTo("userId", mAuth.getCurrentUser().getUid()
+
+                    }
+                });*/
 
     public void show_username(){
         /*Intent intent = getIntent();
