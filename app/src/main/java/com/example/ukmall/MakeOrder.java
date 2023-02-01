@@ -51,12 +51,12 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class MakeOrder extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners, Serializable{
+public class MakeOrder extends AppCompatActivity implements View.OnClickListener,CartAdapter.CartClickedListeners, Serializable {
 
     private Button btnMakeOrder;
     private Spinner paymentMethod, deliveryOption;
-    String SECRET_KEY="sk_test_51MQtpKFv1N0LbQC79BxmjHmq4Yk8h5xfDdOiaA0p4l3M8X2Xg1jdH5e1rQSTIVO26eFq8gV9SSyLXTVtciDwbd1D00Wo7aD7ie";
-    String PUBLISH_KEY="pk_test_51MQtpKFv1N0LbQC775cTkuCoLSk3Gx6SfcG3H7Q3QMI7GUu0U985YUZiMmDBumwPyUOGPhmYWgzLOwDF7MC2ephV00QNipvPbE";
+    String SECRET_KEY = "sk_test_51MQtpKFv1N0LbQC79BxmjHmq4Yk8h5xfDdOiaA0p4l3M8X2Xg1jdH5e1rQSTIVO26eFq8gV9SSyLXTVtciDwbd1D00Wo7aD7ie";
+    String PUBLISH_KEY = "pk_test_51MQtpKFv1N0LbQC775cTkuCoLSk3Gx6SfcG3H7Q3QMI7GUu0U985YUZiMmDBumwPyUOGPhmYWgzLOwDF7MC2ephV00QNipvPbE";
     PaymentSheet paymentSheet;
     String customerID, GetSellerProductId;
     String FinalSellerId = " ";
@@ -64,6 +64,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     String ClientSecret;
     FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String paymentMethodStr, deliveryOptionStr, orderid, username, sellerID;
+    private Double totalPrice, subtotal;
 
     private RecyclerView cartView;
     RecyclerView.LayoutManager cartlayoutManager;
@@ -79,10 +81,10 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         setContentView(R.layout.activity_makeorder);
 
         mAuth = FirebaseAuth.getInstance();
-        totalCartPriceTV=findViewById(R.id.tv_totalprice);
+        totalCartPriceTV = findViewById(R.id.tv_totalprice);
         TVfee = findViewById(R.id.tv_fee);
-        TVsubprice=findViewById(R.id.tv_subtotal);
-        btnMakeOrder=findViewById(R.id.btn_make_order);
+        TVsubprice = findViewById(R.id.tv_subtotal);
+        btnMakeOrder = findViewById(R.id.btn_make_order);
         btnMakeOrder.setOnClickListener(this);
         //CartViewModel
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
@@ -100,29 +102,28 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         paymentMethod = findViewById(R.id.spinner_paymentMethod);
         deliveryOption = findViewById(R.id.spinner_deliveryOption);
 
-        PaymentConfiguration.init(this,PUBLISH_KEY);
-        paymentSheet=new PaymentSheet(this,paymentSheetResult -> {
+        PaymentConfiguration.init(this, PUBLISH_KEY);
+        paymentSheet = new PaymentSheet(this, paymentSheetResult -> {
 
             onPaymentResult(paymentSheetResult);
 
         });
 
         //StringRequest
-        StringRequest stringRequest=new StringRequest(Request.Method.POST,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 "https://api.stripe.com/v1/customers",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
-                        try{
-                            JSONObject object=new JSONObject(response);
-                            customerID=object.getString("id");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            customerID = object.getString("id");
                             getEphericalKey(customerID);
 
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
 
                         }
-
 
 
                     }
@@ -131,18 +132,17 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             public void onErrorResponse(VolleyError error) {
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> header= new HashMap<>();
-                header.put("Authorization","Bearer "+SECRET_KEY);
+                Map<String, String> header = new HashMap<>();
+                header.put("Authorization", "Bearer " + SECRET_KEY);
                 return header;
             }
         };
 
-        RequestQueue requestQueue= Volley.newRequestQueue(MakeOrder.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(MakeOrder.this);
         requestQueue.add(stringRequest);
-
 
 
         btnMakeOrder.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +162,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                 double fee = 1.0;
 
                 cartAdapter.setItemCartList(productCarts);
-                for (int i=0;i<productCarts.size();i++){
+                for (int i = 0; i < productCarts.size(); i++) {
                     String itemName, productID;
                     Double itemPrice;
                     final Long[] quantity = new Long[1];
@@ -170,6 +170,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 
                     price = price + productCarts.get(i).getTotalItemPrice();
 
+                    sellerID = productCarts.get(i).getSellerID();
                     productID = productCarts.get(i).getProductID();
                     itemName = productCarts.get(i).getItemName();
                     itemPrice = productCarts.get(i).getItemPrice();
@@ -208,48 +209,44 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                 //selectedProductList.addAll(productCarts);
                 TVsubprice.setText(String.valueOf(price));
                 TVfee.setText(String.valueOf(fee));
-                totalCartPriceTV.setText(String.valueOf(price+fee));
+                totalCartPriceTV.setText(String.valueOf(price + fee));
 
             }
 
         });
     }
 
-    private String paymentMethodStr,deliveryOptionStr, orderid;
-    private Double totalPrice, subtotal;
-    private boolean orderStatus;
     private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
-        if(paymentSheetResult instanceof PaymentSheetResult.Completed){
-            Toast.makeText(this,"payment success",Toast.LENGTH_SHORT).show();
+        if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
+            Toast.makeText(this, "payment success", Toast.LENGTH_SHORT).show();
             makeOrder();
         }
-        if(paymentSheetResult instanceof PaymentSheetResult.Failed){
-            Toast.makeText(this,"payment failed",Toast.LENGTH_SHORT).show();
-           // makeOrder();
+        if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
+            Toast.makeText(this, "payment failed", Toast.LENGTH_SHORT).show();
+            // makeOrder();
         }
-        if(paymentSheetResult instanceof PaymentSheetResult.Canceled){
-            Toast.makeText(this,"payment canceled",Toast.LENGTH_SHORT).show();
-           // makeOrder();
+        if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
+            Toast.makeText(this, "payment canceled", Toast.LENGTH_SHORT).show();
+            // makeOrder();
         }
     }
 
     private void getEphericalKey(String customerID) {
 
-        StringRequest stringRequest=new StringRequest(Request.Method.POST,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 "https://api.stripe.com/v1/ephemeral_keys",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
-                        try{
-                            JSONObject object=new JSONObject(response);
-                            EphericalKey=object.getString("id");
-                            getClientSecret(customerID,EphericalKey);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            EphericalKey = object.getString("id");
+                            getClientSecret(customerID, EphericalKey);
 
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
 
                         }
-
 
 
                     }
@@ -258,25 +255,25 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             public void onErrorResponse(VolleyError error) {
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> header= new HashMap<>();
-                header.put("Authorization","Bearer "+SECRET_KEY);
-                header.put("Stripe-Version","2022-11-15 ");
+                Map<String, String> header = new HashMap<>();
+                header.put("Authorization", "Bearer " + SECRET_KEY);
+                header.put("Stripe-Version", "2022-11-15 ");
                 return header;
             }
 
             @Nullable
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params=new HashMap<>();
-                params.put("customer",customerID);
+                Map<String, String> params = new HashMap<>();
+                params.put("customer", customerID);
                 return params;
             }
         };
 
-        RequestQueue requestQueue= Volley.newRequestQueue(MakeOrder.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(MakeOrder.this);
         requestQueue.add(stringRequest);
 
     }
@@ -285,22 +282,21 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         totalPrice = Double.valueOf(totalCartPriceTV.getText().toString());
         subtotal = Double.valueOf(TVsubprice.getText().toString());
 
-        StringRequest stringRequest=new StringRequest(Request.Method.POST,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 "https://api.stripe.com/v1/payment_intents",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
-                        try{
-                            JSONObject object=new JSONObject(response);
-                            ClientSecret=object.getString("client_secret");
-                           // getClientSecret(customerID,EphericalKey);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            ClientSecret = object.getString("client_secret");
+                            // getClientSecret(customerID,EphericalKey);
 
 
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
 
                         }
-
 
 
                     }
@@ -309,11 +305,11 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             public void onErrorResponse(VolleyError error) {
 
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> header= new HashMap<>();
-                header.put("Authorization","Bearer "+SECRET_KEY);
+                Map<String, String> header = new HashMap<>();
+                header.put("Authorization", "Bearer " + SECRET_KEY);
                 return header;
             }
 
@@ -321,20 +317,20 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
-               // Toast.makeText(MakeOrder.this, "Price:"+totalPrice, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MakeOrder.this, "Price:"+totalPrice, Toast.LENGTH_SHORT).show();
                 //double num=60;
                 String totalPrice = totalCartPriceTV.getText().toString();
                 Long totalPriceCents = (long) (Double.parseDouble(totalPrice) * 100);
-                Map<String, String> params=new HashMap<>();
-                params.put("customer",customerID);
+                Map<String, String> params = new HashMap<>();
+                params.put("customer", customerID);
                 params.put("amount", String.valueOf(totalPriceCents));
-                params.put("currency","myr");
-                params.put("automatic_payment_methods[enabled]","true");
+                params.put("currency", "myr");
+                params.put("automatic_payment_methods[enabled]", "true");
                 return params;
             }
         };
 
-        RequestQueue requestQueue= Volley.newRequestQueue(MakeOrder.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(MakeOrder.this);
         requestQueue.add(stringRequest);
 
     }
@@ -342,22 +338,20 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     private void PaymentFlow() {
 
         paymentSheet.presentWithPaymentIntent(
-                ClientSecret,new PaymentSheet.Configuration("testing"
-                        ,new PaymentSheet.CustomerConfiguration(
-                                customerID,
-                                EphericalKey
+                ClientSecret, new PaymentSheet.Configuration("testing"
+                        , new PaymentSheet.CustomerConfiguration(
+                        customerID,
+                        EphericalKey
                 ))
         );
 
     }
 
 
-
     private void makeOrder() {
 
         String timestamp = "" + System.currentTimeMillis();
         totalPrice = Double.valueOf(totalCartPriceTV.getText().toString());
-        orderStatus = false; // false = seller prepare the order, true = order has complete
         paymentMethodStr = paymentMethod.getSelectedItem().toString();
         deliveryOptionStr = deliveryOption.getSelectedItem().toString();
         orderid = "ORD" + timestamp;
@@ -393,8 +387,30 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
 
         db.collection("order").document(orderid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(Void unused) {
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
 
+                    Object name = documentSnapshot.get("userName");
+                    username = name.toString();
+
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("orderId", orderid);
+                    hashMap.put("totalPrice", totalPrice);
+                    hashMap.put("paymentMethod", paymentMethodStr);
+                    hashMap.put("deliveryOption", deliveryOptionStr);
+                    hashMap.put("customerID", mAuth.getCurrentUser().getUid());
+                    hashMap.put("status", "pack");
+                    hashMap.put("username", username);
+                    hashMap.put("sellerID", sellerID);
+
+                    db.collection("order").document(orderid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+
+                        }
+                    });
+
+                }
             }
         });
 
@@ -437,12 +453,12 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     Double initSpend, totalSpend;
 
                     Double spendTotal = Double.parseDouble(documentSnapshot.get("totalSpend").toString());
                     initSpend = (Double) spendTotal;
-                    totalSpend = initSpend+totalPrice;
+                    totalSpend = initSpend + totalPrice;
 
                     DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
                     userRef.update("totalSpend", totalSpend);

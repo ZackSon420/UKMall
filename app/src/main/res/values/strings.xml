@@ -2,9 +2,7 @@
     <string name="app_name">UKMall</string>
 
     <string-array name="paymentMethod">
-        <item>Cash</item>
-        <item>FPX</item>
-        <item>Card Credit</item>
+        <item>Card Debit</item>
     </string-array>
 
     <string-array name="deliveryMethod">

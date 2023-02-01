@@ -1,14 +1,14 @@
 package com.example.ukmall;
 
 public class Product {
-    String productId,productTitle, productDescription, url, url2, productStore, productCategory;
+    String productId,productTitle, productDescription, url, url2, productStore, productCategory, userId;
     Double originalPrice, totalSale;
     Integer productQuantity, bought;
 
     public Product(){
     }
 
-    public Product(String productId, String productTitle, String productDescription, String url, String url2, String productStore, String productCategory, Double originalPrice, Double totalSale, Integer productQuantity, Integer bought) {
+    public Product(String productId, String productTitle, String productDescription, String url, String url2, String productStore, String productCategory, String userId, Double originalPrice, Double totalSale, Integer productQuantity, Integer bought) {
         this.productId = productId;
         this.productTitle = productTitle;
         this.productDescription = productDescription;
@@ -16,10 +16,19 @@ public class Product {
         this.url2 = url2;
         this.productStore = productStore;
         this.productCategory = productCategory;
+        this.userId = userId;
         this.originalPrice = originalPrice;
         this.totalSale = totalSale;
         this.productQuantity = productQuantity;
         this.bought = bought;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getProductId() {

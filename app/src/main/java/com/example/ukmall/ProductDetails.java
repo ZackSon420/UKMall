@@ -176,6 +176,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
         item.setItemName(intent.getStringExtra("productName"));
         item.setProductID(intent.getStringExtra("productId"));
+        item.setSellerID(intent.getStringExtra("userId"));
 
        // item.setShoeBrandName(shoe.getShoeBrandName());
         String prd= intent.getStringExtra("productPrice");

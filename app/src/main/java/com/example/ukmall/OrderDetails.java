@@ -99,6 +99,24 @@ public class OrderDetails extends AppCompatActivity implements View.OnClickListe
         tvPayment.setText(intent.getStringExtra("payment"));
         tvDelivery.setText(intent.getStringExtra("delivery"));
         tvTotalPrice.setText("RM" + intent.getStringExtra("totalprice"));
+
+        FirebaseFirestore db2 = FirebaseFirestore.getInstance();
+        DocumentReference orderRef2 = db2.collection("order").document(intent.getStringExtra("orderId"));
+        orderRef2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                if (snapshot != null && snapshot.exists()) {
+                    String status = snapshot.getString("username");
+                    tvCustName.setText(status);
+                    //  editor.putString("status", status);
+                    // editor.apply();
+                    //Log.d(TAG, "Order status: " + status);
+
+                } else {
+                    Log.d(TAG, "No document found with id: " + intent.getStringExtra("orderId"));
+                }
+            }
+        });
 //        orderStatus[0] = "ready";
 
 //        FirebaseFirestore db = FirebaseFirestore.getInstance();

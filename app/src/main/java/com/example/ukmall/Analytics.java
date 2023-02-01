@@ -8,6 +8,7 @@ import static com.google.firebase.firestore.Query.Direction.DESCENDING;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.helper.widget.MotionEffect;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +53,7 @@ public class Analytics extends AppCompatActivity {
     AnalyticsAdapter analyticsAdapter;
     private TextView TotalProductTv, TotalSalesTV, TotalOrderTV, TotalSpendTV;
     ArrayList<Product> productList;
+    ArrayList<Order> orderList;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -61,6 +64,7 @@ public class Analytics extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analytics);
         mAuth = FirebaseAuth.getInstance();
+        String userId = mAuth.getCurrentUser().getUid();
 
         TotalProductTv=findViewById(R.id.tv_total_product);
         TotalSalesTV=findViewById(R.id.tv_total_sales);
@@ -72,6 +76,7 @@ public class Analytics extends AppCompatActivity {
         productAView.setLayoutManager(productALayoutManager);
 
         productList=new ArrayList<>();
+        orderList = new ArrayList<>();
         getSellerProduct();
         analyticsAdapter = new AnalyticsAdapter(productList);
 
@@ -84,14 +89,39 @@ public class Analytics extends AppCompatActivity {
         CollectionReference collection = db.collection("product");
         CollectionReference orderCollection = db.collection("order");
 
-        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+        DocumentReference userRef = db.collection("user").document(userId);
 
         AggregateQuery countOrderQuery = orderCollection.count();
 
 
-//        Total Order
+//      Total Order
 
-
+        db.collectionGroup("order")
+                .whereEqualTo("sellerID", userId)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "SUCCESS");
+                            for (DocumentChange dc : task.getResult().getDocumentChanges()) {
+                                if (dc.getType() == DocumentChange.Type.ADDED) {
+                                    orderList.add(dc.getDocument().toObject(Order.class));
+                                }
+                            }
+                            int totalOrder = 0;
+                            for(int i=0;i<orderList.size();i++){
+                               totalOrder++;
+                            }
+                            TotalOrderTV.setText(""+totalOrder);
+                            Log.d(TAG, "totalOrder: " + totalOrder);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "FAIL");
+                    }
+                });
 
 //        countOrderQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
 //            if (task.isSuccessful()) {
@@ -100,8 +130,6 @@ public class Analytics extends AppCompatActivity {
 //
 //            }
 //        });
-
-//      Total Spend
 
 
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -160,79 +188,4 @@ public class Analytics extends AppCompatActivity {
         });
     }
 
-
-
-//      Total Sales
-//
-//        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if(task.isSuccessful()){
-//                    for(QueryDocumentSnapshot document : task.getResult()){
-////                        Double totalPrice = document.getDouble("totalPrice");
-////                        saleTotal += totalPrice;
-//                        Order order = document.toObject(Order.class);
-//                        arrayOrder.add(order);
-//                    }
-////                    TotalSalesTV.setText("" +arrayOrder.size());
-//                }else{
-//                    Log.d("debug", "Error");
-//                }
-//
-//                for (int i = 1; i<arrayOrder.size(); i++){
-//                //    saleTotal = saleTotal + arrayOrder.get(i).getTotalPrice();
-//                }
-//
-//              //  TotalSalesTV.setText(String.valueOf(saleTotal));
-//            }
-//        });
-//
-//
-//
-//    }
-
-//    private Integer totalSales() {
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        CollectionReference orderCollection = db.collection("order");
-//        Double totalSales = 0.0;
-//
-//        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if(task.isSuccessful()){
-//                    for(QueryDocumentSnapshot document : task.getResult()){
-//                        Order order = document.toObject(Order.class);
-//                        arrayOrder.add(order);
-//                    }
-//                }else{
-//                    Toast.makeText(Analytics.this, "Retrieve object failed", Toast.LENGTH_SHORT).show();
-//                    Log.d(TAG,"failed to retrieve",task.getException());
-//                }
-//                if(arrayOrder.size()==0){
-//                    Log.d("FAILED","Failed To Retrieve");
-//                }
-//            }
-//        });
-//
-//        db.collectionGroup("order").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//
-//                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
-//                        if(dc.getType()==DocumentChange.Type.ADDED){
-//                            arrayOrder.add(dc.getDocument().toObject(Order.class));
-//                        }
-//                    }
-//                }
-//            }
-//        });
-
-//        for (int i = 0; i<arrayOrder.size(); i++){
-//            totalSales = totalSales + arrayOrder.get(i).getTotalPrice();
-//        }
-//
-//        return arrayOrder.size();
-//
-//    }
 }
