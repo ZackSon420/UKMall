@@ -8,6 +8,7 @@ import static com.google.firebase.firestore.Query.Direction.DESCENDING;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.helper.widget.MotionEffect;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +53,7 @@ public class Analytics extends AppCompatActivity {
     AnalyticsAdapter analyticsAdapter;
     private TextView TotalProductTv, TotalSalesTV, TotalOrderTV, TotalSpendTV;
     ArrayList<Product> productList;
+    ArrayList<Order> orderList;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -73,6 +76,7 @@ public class Analytics extends AppCompatActivity {
         productAView.setLayoutManager(productALayoutManager);
 
         productList=new ArrayList<>();
+        orderList = new ArrayList<>();
         getSellerProduct();
         analyticsAdapter = new AnalyticsAdapter(productList);
 
@@ -91,20 +95,31 @@ public class Analytics extends AppCompatActivity {
 
 
 //      Total Order
+
         db.collectionGroup("order")
                 .whereEqualTo("sellerID", userId)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            Integer totalOrder = 0;
+                            Log.d(TAG, "SUCCESS");
                             for (DocumentChange dc : task.getResult().getDocumentChanges()) {
                                 if (dc.getType() == DocumentChange.Type.ADDED) {
-                                    totalOrder = totalOrder + 1;
+                                    orderList.add(dc.getDocument().toObject(Order.class));
                                 }
                             }
-                            TotalOrderTV.setText("" + totalOrder);
+                            int totalOrder = 0;
+                            for(int i=0;i<orderList.size();i++){
+                               totalOrder++;
+                            }
+                            TotalOrderTV.setText(""+totalOrder);
+                            Log.d(TAG, "totalOrder: " + totalOrder);
                         }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "FAIL");
                     }
                 });
 
