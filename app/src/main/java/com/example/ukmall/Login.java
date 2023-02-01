@@ -114,11 +114,19 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        //Create Session For Each User
-                        sessionManager.createSession(username,password);
-                        Intent intent = new Intent(getApplicationContext(), Homepage.class);
-                        startActivity(intent);
-                        finish();
+                        if(username.equals("admin@gmail.com")){
+                            sessionManager.createSession(username,password);
+                            Intent intent = new Intent(getApplicationContext(), Admin.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else {
+                            //Create Session For Each User
+                            sessionManager.createSession(username, password);
+                            Intent intent = new Intent(getApplicationContext(), Homepage.class);
+                            startActivity(intent);
+                            finish();
+                        }
 
 
                     } else {
