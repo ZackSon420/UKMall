@@ -58,6 +58,7 @@ public class Analytics extends AppCompatActivity {
     FirebaseFirestore db;
 
     private Double saleTotal;
+    private int totalOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,32 +97,52 @@ public class Analytics extends AppCompatActivity {
 
 //      Total Order
 
-        db.collectionGroup("order")
-                .whereEqualTo("sellerID", userId)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "SUCCESS");
-                            for (DocumentChange dc : task.getResult().getDocumentChanges()) {
-                                if (dc.getType() == DocumentChange.Type.ADDED) {
-                                    orderList.add(dc.getDocument().toObject(Order.class));
-                                }
-                            }
-                            int totalOrder = 0;
-                            for(int i=0;i<orderList.size();i++){
-                               totalOrder++;
-                            }
+        db.collection("order").whereEqualTo("sellerID", mAuth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("Error", e.getMessage());
+                }
+                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case ADDED:
+                            orderList.add(dc.getDocument().toObject(Order.class));
+                            totalOrder = orderList.size();
+
                             TotalOrderTV.setText(""+totalOrder);
-                            Log.d(TAG, "totalOrder: " + totalOrder);
-                        }
+
+                            break;
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "FAIL");
-                    }
-                });
+                }
+            }
+        });
+
+//        db.collectionGroup("order")
+//                .whereEqualTo("sellerID", userId)
+//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "SUCCESS");
+//                            for (DocumentChange dc : task.getResult().getDocumentChanges()) {
+//                                if (dc.getType() == DocumentChange.Type.ADDED) {
+//                                    orderList.add(dc.getDocument().toObject(Order.class));
+//                                }
+//                            }
+//                            int totalOrder = 0;
+//                            for(int i=0;i<orderList.size();i++){
+//                               totalOrder++;
+//                            }
+//                            TotalOrderTV.setText(""+totalOrder);
+//                            Log.d(TAG, "totalOrder: " + totalOrder);
+//                        }
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d(TAG, "FAIL");
+//                    }
+//                });
 
 //        countOrderQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
 //            if (task.isSuccessful()) {
