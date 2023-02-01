@@ -86,19 +86,22 @@ public class Analytics extends AppCompatActivity {
 
         DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
 
-        AggregateQuery countQuery = collection.count();
         AggregateQuery countOrderQuery = orderCollection.count();
 
 
-        countOrderQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                AggregateQuerySnapshot snapshot = task.getResult();
-                TotalOrderTV.setText("" + snapshot.getCount());
+//        Total Order
 
-            }
-        });
 
-//      Total Spend
+
+//        countOrderQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                AggregateQuerySnapshot snapshot = task.getResult();
+//                TotalOrderTV.setText("" + snapshot.getCount());
+//
+//            }
+//        });
+
+
 
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -121,7 +124,6 @@ public class Analytics extends AppCompatActivity {
         productList.clear();
 
         db = FirebaseFirestore.getInstance();
-
 
         db.collection("product").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
