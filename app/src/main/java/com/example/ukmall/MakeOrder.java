@@ -1,5 +1,6 @@
 package com.example.ukmall;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -26,12 +27,16 @@ import com.example.ukmall.viewmodel.CartViewModel;
 
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
 import com.stripe.android.paymentsheet.PaymentSheetResult;
@@ -53,7 +58,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     String SECRET_KEY = "sk_test_51MQtpKFv1N0LbQC79BxmjHmq4Yk8h5xfDdOiaA0p4l3M8X2Xg1jdH5e1rQSTIVO26eFq8gV9SSyLXTVtciDwbd1D00Wo7aD7ie";
     String PUBLISH_KEY = "pk_test_51MQtpKFv1N0LbQC775cTkuCoLSk3Gx6SfcG3H7Q3QMI7GUu0U985YUZiMmDBumwPyUOGPhmYWgzLOwDF7MC2ephV00QNipvPbE";
     PaymentSheet paymentSheet;
-    String customerID;
+    String customerID, GetSellerProductId;
+    String FinalSellerId = " ";
     String EphericalKey;
     String ClientSecret;
     FirebaseAuth mAuth;
@@ -144,7 +150,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             public void onClick(View v) {
 
                 PaymentFlow();
-//                makeOrder();
+                //makeOrder();
 
             }
         });
@@ -178,6 +184,14 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                     prodhashMap.put("quantity", quantity[0]);
                     arrayOrder.add(prodhashMap);
 
+                    //Option to get one sellerId from latest product
+                    GetSellerProductId = productCarts.get(i).getProductID();
+
+                    /*Store sellerId for each product
+                    seller = productCarts.get(i).getSellerId();
+                    prodhashMap.put("sellerId", seller);*/
+
+
                     db.collection("product").document(productID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -192,6 +206,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
                     });
 
                 }
+                //selectedProductList.addAll(productCarts);
                 TVsubprice.setText(String.valueOf(price));
                 TVfee.setText(String.valueOf(fee));
                 totalCartPriceTV.setText(String.valueOf(price + fee));
@@ -340,6 +355,21 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
         paymentMethodStr = paymentMethod.getSelectedItem().toString();
         deliveryOptionStr = deliveryOption.getSelectedItem().toString();
         orderid = "ORD" + timestamp;
+
+        db.collection("product").whereEqualTo("productId",GetSellerProductId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    //Toast.makeText(MakeOrder.this,"Dapat WOI PRODUCT DETAILS",Toast.LENGTH_SHORT).show();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //Fetch from database as Map
+                        FinalSellerId = (String) document.getData().get("userId");
+                        Toast.makeText(MakeOrder.this,"SELLER ID " + FinalSellerId, Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+
         addOrder();
 
     }
@@ -347,8 +377,15 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     private void addOrder() {
         CollectionReference orderRef = db.collection("order");
 
-        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("orderId", orderid);
+        hashMap.put("orderStatus", orderStatus);
+        hashMap.put("totalPrice", totalPrice);
+        hashMap.put("paymentMethod", paymentMethodStr);
+        hashMap.put("deliveryOption", deliveryOptionStr);
+        hashMap.put("sellerId", FinalSellerId);
+
+        db.collection("order").document(orderid).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
@@ -377,9 +414,6 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             }
         });
 
-
-
-
         //FirebaseFirestore db = FirebaseFirestore.getInstance();
         //CollectionReference orderDetailRef = db.collection("orderDetail");
         // Query docRef = orderDetailRef.whereEqualTo("orderId", orderid);
@@ -399,6 +433,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             public void onSuccess(Void unused) {
 
                 updateTotalSpend(totalPrice);
+                updateTotalSale("OQZAMnDhMqZZzjYkMQV5904TpkH2", (totalPrice-1));
 
                 Toast.makeText(MakeOrder.this, "Order are successful! Please wait for seller to prepare your order", Toast.LENGTH_SHORT).show();
 
@@ -411,6 +446,7 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             }
         });
     }
+
 
     public void updateTotalSpend(Double totalPrice) {
         DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
@@ -431,6 +467,45 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
             }
         });
     }
+
+    //add new sales into seller database
+    public void updateTotalSale (String SellerId, Double newSales){
+        DocumentReference sellerRef = db.collection("user").document(SellerId);
+        sellerRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Double initSale, totalSales;
+
+                    Double saleTotal = Double.parseDouble(documentSnapshot.get("totalSales").toString());
+                    initSale = (Double) saleTotal;
+                    totalSales = initSale+newSales;
+
+                    sellerRef.update("totalSales", totalSales);
+
+                }
+            }
+        });
+    }
+
+
+//    public void updateTotalSpend(Double totalPrice) {
+//        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+//        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if (documentSnapshot.exists()) {
+//
+//                    Object spendTotal = documentSnapshot.get("totalSpend");
+//                    Double totalSpend = totalPrice + (Double) spendTotal;
+//
+//                    DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+//                    userRef.update("totalSpend", totalSpend);
+//
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public void onClick(View view) {
