@@ -101,6 +101,7 @@ public class Analytics extends AppCompatActivity {
 //            }
 //        });
 
+//      Total Spend
 
 
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -124,6 +125,7 @@ public class Analytics extends AppCompatActivity {
         productList.clear();
 
         db = FirebaseFirestore.getInstance();
+
 
         db.collection("product").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -157,4 +159,80 @@ public class Analytics extends AppCompatActivity {
             }
         });
     }
+
+
+
+//      Total Sales
+//
+//        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if(task.isSuccessful()){
+//                    for(QueryDocumentSnapshot document : task.getResult()){
+////                        Double totalPrice = document.getDouble("totalPrice");
+////                        saleTotal += totalPrice;
+//                        Order order = document.toObject(Order.class);
+//                        arrayOrder.add(order);
+//                    }
+////                    TotalSalesTV.setText("" +arrayOrder.size());
+//                }else{
+//                    Log.d("debug", "Error");
+//                }
+//
+//                for (int i = 1; i<arrayOrder.size(); i++){
+//                //    saleTotal = saleTotal + arrayOrder.get(i).getTotalPrice();
+//                }
+//
+//              //  TotalSalesTV.setText(String.valueOf(saleTotal));
+//            }
+//        });
+//
+//
+//
+//    }
+
+//    private Integer totalSales() {
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        CollectionReference orderCollection = db.collection("order");
+//        Double totalSales = 0.0;
+//
+//        orderCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if(task.isSuccessful()){
+//                    for(QueryDocumentSnapshot document : task.getResult()){
+//                        Order order = document.toObject(Order.class);
+//                        arrayOrder.add(order);
+//                    }
+//                }else{
+//                    Toast.makeText(Analytics.this, "Retrieve object failed", Toast.LENGTH_SHORT).show();
+//                    Log.d(TAG,"failed to retrieve",task.getException());
+//                }
+//                if(arrayOrder.size()==0){
+//                    Log.d("FAILED","Failed To Retrieve");
+//                }
+//            }
+//        });
+//
+//        db.collectionGroup("order").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//
+//                    for(DocumentChange dc : task.getResult().getDocumentChanges()){
+//                        if(dc.getType()==DocumentChange.Type.ADDED){
+//                            arrayOrder.add(dc.getDocument().toObject(Order.class));
+//                        }
+//                    }
+//                }
+//            }
+//        });
+
+//        for (int i = 0; i<arrayOrder.size(); i++){
+//            totalSales = totalSales + arrayOrder.get(i).getTotalPrice();
+//        }
+//
+//        return arrayOrder.size();
+//
+//    }
 }
