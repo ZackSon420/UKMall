@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.example.ukmall.dao.CartDAO;
 import com.example.ukmall.utils.model.Item;
 
-@Database(entities = {Item.class}, version = 4)
+@Database(entities = {Item.class}, version = 5)
 public abstract class CartDatabase extends RoomDatabase {
 
     public abstract CartDAO cartDAO();
