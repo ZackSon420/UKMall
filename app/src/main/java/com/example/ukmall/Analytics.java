@@ -40,6 +40,8 @@ import com.google.firebase.firestore.auth.User;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Analytics extends AppCompatActivity {
@@ -49,7 +51,6 @@ public class Analytics extends AppCompatActivity {
     AnalyticsAdapter analyticsAdapter;
     private TextView TotalProductTv, TotalSalesTV, TotalOrderTV, TotalSpendTV;
     ArrayList<Product> productList;
-//    int[] arr = {R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies, R.drawable.brownies};
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -83,34 +84,37 @@ public class Analytics extends AppCompatActivity {
         CollectionReference collection = db.collection("product");
         CollectionReference orderCollection = db.collection("order");
 
-        AggregateQuery countQuery = collection.count();
+        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+
         AggregateQuery countOrderQuery = orderCollection.count();
 
-        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                AggregateQuerySnapshot snapshot = task.getResult();
-                TotalProductTv.setText("" + snapshot.getCount());
 
-            }
-        });
+//        Total Order
 
-        countOrderQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                AggregateQuerySnapshot snapshot = task.getResult();
-                TotalOrderTV.setText("" + snapshot.getCount());
 
-            }
-        });
+
+//        countOrderQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                AggregateQuerySnapshot snapshot = task.getResult();
+//                TotalOrderTV.setText("" + snapshot.getCount());
+//
+//            }
+//        });
 
 //      Total Spend
 
-        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
                     Object spendTotal = documentSnapshot.get("totalSpend");
+                    Object totalProduct = documentSnapshot.get("totalProduct");
+                    Object totalSales = documentSnapshot.get("totalSales");
+
                     TotalSpendTV.setText("" + spendTotal);
+                    TotalProductTv.setText(""+totalProduct);
+                    TotalSalesTV.setText(""+totalSales);
                 }
             }
         });
@@ -121,22 +125,6 @@ public class Analytics extends AppCompatActivity {
         productList.clear();
 
         db = FirebaseFirestore.getInstance();
-
-//        db.collection("product").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).orderBy("bought", DESCENDING).get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        for(DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()){
-//                            switch (dc.getType()) {
-//                            case ADDED:
-//                            productList.add(dc.getDocument().toObject(Product.class));
-//                            analyticsAdapter.notifyDataSetChanged();
-//                            break;
-//                            }
-//                        }
-//                    }
-//                });
-
 
 
         db.collection("product").whereEqualTo("userId", mAuth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -149,6 +137,21 @@ public class Analytics extends AppCompatActivity {
                     switch (dc.getType()) {
                         case ADDED:
                             productList.add(dc.getDocument().toObject(Product.class));
+
+                            Collections.sort(productList, new Comparator<Product>() {
+                                @Override
+                                public int compare(Product t1, Product t2) {
+
+                                    if(t1.bought > t2.bought)
+                                        return -1;
+                                    else if(t1.bought<t2.bought)
+                                        return 1;
+                                    else
+                                        return 0;
+                                }
+                            });
+
+
                             analyticsAdapter.notifyDataSetChanged();
                             break;
                     }

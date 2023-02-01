@@ -12,20 +12,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Account_User extends AppCompatActivity implements View.OnClickListener {
 
     private SessionManager sessionManager;
-    TextView tv_userName;
+    TextView tv_userName, tv_totalSale;
     ImageView toShipIv, toReceiveIv, completeIv;
     Button sellerPageBT, manageOrderBT, analytics;
+    FirebaseAuth mAuth;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_user);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
+        tv_totalSale=findViewById(R.id.tv_totalsales3);
         toShipIv = findViewById(R.id.toShipIV);
         toReceiveIv = findViewById(R.id.toReceiveIV);
         completeIv = findViewById(R.id.completeIV);
@@ -55,6 +65,7 @@ public class Account_User extends AppCompatActivity implements View.OnClickListe
         sessionManager = new SessionManager(this);
         tv_userName = findViewById(R.id.tv_usernameaccount);
         show_username();
+        get_totalSale();
 
         //Perform item selected listener untuk button BottomNavigationView
 
@@ -93,14 +104,34 @@ public class Account_User extends AppCompatActivity implements View.OnClickListe
     }
 
     public void show_username(){
-        /*Intent intent = getIntent();
 
-        String username = intent.getStringExtra("name");*/
+        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
 
-        sessionManager =new SessionManager(this);
-        String username = sessionManager.getUsername();
+                    Object name = documentSnapshot.get("userName");
+                    tv_userName.setText(""+name);
 
-        tv_userName.setText(username);
+                }
+            }
+        });
+    }
+
+    public void get_totalSale(){
+        DocumentReference userRef = db.collection("user").document(mAuth.getCurrentUser().getUid());
+
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Object totalSales = documentSnapshot.get("totalSales");
+
+                    tv_totalSale.setText(""+totalSales);
+                }
+            }
+        });
     }
 
     @Override
