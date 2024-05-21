@@ -57,8 +57,8 @@ public class MakeOrder extends AppCompatActivity implements View.OnClickListener
     DecimalFormat df = new DecimalFormat("0.00");
     private Button btnMakeOrder;
     private Spinner paymentMethod, deliveryOption;
-    String SECRET_KEY = "sk_test_51MQtpKFv1N0LbQC79BxmjHmq4Yk8h5xfDdOiaA0p4l3M8X2Xg1jdH5e1rQSTIVO26eFq8gV9SSyLXTVtciDwbd1D00Wo7aD7ie";
-    String PUBLISH_KEY = "pk_test_51MQtpKFv1N0LbQC775cTkuCoLSk3Gx6SfcG3H7Q3QMI7GUu0U985YUZiMmDBumwPyUOGPhmYWgzLOwDF7MC2ephV00QNipvPbE";
+    String SECRET_KEY = "";
+    String PUBLISH_KEY = "";
     PaymentSheet paymentSheet;
     String customerID, GetSellerProductId;
     String FinalSellerId = " ";
